@@ -540,7 +540,8 @@ def init():
             if ARGS.verbose:
                 print(f'[{color_text("blue", "*")}] Starting in hidden mode')
             configs["options"].add_argument("--headless")
-        configs["options"].add_argument("--start-maximized")
+        else:
+            configs["options"].add_argument("--start-maximized")
 
         if ARGS.verbose:
             print(f'[{color_text("white", "*")}] Opening browser ...')
