@@ -15,7 +15,7 @@ import colorama
 import requests
 import requests.exceptions
 from selenium.common import exceptions
-from selenium.webdriver import Firefox, FirefoxOptions, FirefoxProfile
+from selenium.webdriver import Firefox, FirefoxOptions, FirefoxProfile, Chrome, ChromeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
@@ -492,42 +492,66 @@ def init():
     """
         Start the webdriver.
     """
+    if "win" in sys.platform:
+        # browser options
+        _options = ChromeOptions()
+        _options.add_argument("--incognito")
+        _options.add_argument("--disable-extensions")
+        _options.add_argument("--disable-plugins-discovery")
 
-    # browser settings
-    _profile = FirefoxProfile()
-    _options = FirefoxOptions()
+        if not ARGS.browser:
+            if ARGS.verbose:
+                print(f'[{color_text("blue", "*")}] Starting in hidden mode')
+            _options.add_argument("--headless")
+        else:
+            _options.add_argument("--start-maximized")
 
-    # eliminate pop-ups
-    _profile.set_preference("dom.popup_maximum", 0)
-    _profile.set_preference("privacy.popups.showBrowserMessage", False)
-
-    # incognito
-    _profile.set_preference("browser.privatebrowsing.autostart", True)
-    _options.add_argument("--incognito")
-
-    # arguments
-    # _options.add_argument('--disable-blink-features=AutomationControlled')
-    _options.add_argument("--disable-extensions")
-    # _options.add_argument('--profile-directory=Default')
-    _options.add_argument("--disable-plugins-discovery")
-
-    configs = {"firefox_profile": _profile, "options": _options}
-    if not ARGS.browser:
         if ARGS.verbose:
-            print(f'[{color_text("blue", "*")}] Starting in hidden mode')
-        configs["options"].add_argument("--headless")
-    configs["options"].add_argument("--start-maximized")
-
-    if ARGS.verbose:
-        print(f'[{color_text("white", "*")}] Opening browser ...')
-    try:
-        engine = Firefox(**configs)
-    except Exception as error:
-        print(color_text("red",
-                         f'The executable "geckodriver" was not found or the browser "Firefox" is not installed.'))
-        print(color_text("yellow", f"error details:\n{error}"))
+            print(f'[{color_text("white", "*")}] Opening browser ...')
+        try:
+            engine = Chrome(options=_options, executable_path="./bin/chromedriver.exe")
+        except Exception as error:
+            print(color_text("red",
+                             f'The executable "chromedriver" was not found or the browser "Chrome" is not installed.'))
+            print(color_text("yellow", f"error details:\n{error}"))
+        else:
+            return engine
     else:
-        return engine
+        # browser settings
+        _profile = FirefoxProfile()
+        _options = FirefoxOptions()
+
+        # eliminate pop-ups
+        _profile.set_preference("dom.popup_maximum", 0)
+        _profile.set_preference("privacy.popups.showBrowserMessage", False)
+
+        # incognito
+        _profile.set_preference("browser.privatebrowsing.autostart", True)
+        _options.add_argument("--incognito")
+
+        # arguments
+        # _options.add_argument('--disable-blink-features=AutomationControlled')
+        _options.add_argument("--disable-extensions")
+        # _options.add_argument('--profile-directory=Default')
+        _options.add_argument("--disable-plugins-discovery")
+
+        configs = {"firefox_profile": _profile, "options": _options}
+        if not ARGS.browser:
+            if ARGS.verbose:
+                print(f'[{color_text("blue", "*")}] Starting in hidden mode')
+            configs["options"].add_argument("--headless")
+        configs["options"].add_argument("--start-maximized")
+
+        if ARGS.verbose:
+            print(f'[{color_text("white", "*")}] Opening browser ...')
+        try:
+            engine = Firefox(**configs)
+        except Exception as error:
+            print(color_text("red",
+                             f'The executable "geckodriver" was not found or the browser "Firefox" is not installed.'))
+            print(color_text("yellow", f"error details:\n{error}"))
+        else:
+            return engine
 
 
 def out_file(_input: list[str]):
