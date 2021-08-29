@@ -25,7 +25,7 @@ from src.logo import name
 from src.manager import Manager, Xpaths
 
 module_name = 'FisherMan: Extract information from facebook profiles.'
-__version__ = "3.4.1"
+__version__ = "3.4.3"
 
 
 class Fisher:
@@ -132,7 +132,7 @@ def upload_txt_file(name_file: str):
     if Path(name_file).is_file():
         try:
             with open(name_file, 'r') as txt:
-                users_txt = txt.readlines()
+                users_txt = [line.replace("\n", "") for line in txt.readlines()]
         except Exception as error:
             print(color_text('red', f'An error has occurred: {error}'))
         else:
@@ -145,10 +145,11 @@ def compact():
     """
         Compress all .txt with the exception of requirements.txt.
     """
-    with ZipFile(f"{str(datetime.datetime.now())[:16]}", "w", ZIP_DEFLATED) as zip_output:
+    with ZipFile(f"{str(datetime.datetime.now())[:16]}.zip", "w", ZIP_DEFLATED) as zip_output:
         for _, _, files in walk(getcwd()):
             for archive in files:
-                _file_name, extension = archive.split(".")
+                extension = Path(archive).suffix
+                _file_name = archive.replace(extension, "")
                 if (extension.lower() == ".txt" and _file_name != "requeriments") or extension.lower() == ".jpeg":
                     zip_output.write(archive)
                     remove(archive)
@@ -242,13 +243,18 @@ def extra_data(brw: Firefox, user: str):
     else:
         bio = None
 
-    followers = str(collection_by_xpath(ec.visibility_of_element_located, xpaths.followers).text).split()[0]
+    if collection_by_xpath(ec.visibility_of_element_located, xpaths.followers) is not None:
+        followers = str(collection_by_xpath(ec.visibility_of_element_located, xpaths.followers).text).split()[0]
+    else:
+        followers = None
 
     try:
         element = collection_by_xpath(ec.visibility_of_element_located, xpaths.friends)
         element = element.find_elements_by_tag_name("span")[2].text
     except IndexError:
         print(f'[{color_text("red", "-")}] There is no number of friends to catch')
+    except:
+        friends = None
     else:
         friends = element
 
@@ -288,6 +294,25 @@ def scrolling_by_element(brw: Firefox, locator: tuple, n: int = 30):
     return elements
 
 
+def thin_out(user: str):
+    """
+        Username Refiner.
+
+        :param user: user to be refined.
+
+        This function returns a username that is acceptable for the script to run correctly.
+    """
+
+    if "id=" in user or user.isnumeric():
+        if "facebook.com" in user:
+            user = user[user.index("=") + 1:]
+        return manager.get_id_prefix(), user
+    else:
+        if "facebook.com" in user:
+            user = user[user.index("/", 9) + 1:]
+        return manager.get_url(), user
+
+
 def scrape(brw: Firefox, items: list[str]):
     """
         Extract certain information from the html of an item in the list provided.
@@ -302,24 +327,6 @@ def scrape(brw: Firefox, items: list[str]):
               '/about_work_and_education', '/about_places']
     branch_id = [bn.replace("/", "&sk=") for bn in branch]
     wbw = WebDriverWait(brw, 10)
-
-    def thin_out(user: str):
-        """
-            Username Refiner.
-
-            :param user: user to be refined.
-
-            This function returns a username that is acceptable for the script to run correctly.
-        """
-
-        if user.isnumeric():
-            if "facebook.com" in user:
-                user = user[user.index("=") + 1:]
-            return manager.get_id_prefix(), user
-        else:
-            if "facebook.com" in user:
-                user = user[user.index("/", 9) + 1:]
-            return manager.get_url(), user
 
     for usrs in items:
         prefix, usrs = thin_out(usrs)
@@ -393,7 +400,7 @@ def scrape(brw: Firefox, items: list[str]):
                     extra_data(brw, memb)
 
                 rest = 0
-                for bn in branch if not memb.isnumeric() else branch_id:
+                for bn in branch if not thin_out(memb)[1].isnumeric() else branch_id:
                     brw.get(f'{memb + bn}')
                     try:
                         output2 = wbw.until(ec.presence_of_element_located((By.CLASS_NAME,
@@ -499,7 +506,7 @@ def init():
     _options.add_argument("--incognito")
 
     # arguments
-    _options.add_argument('--disable-blink-features=AutomationControlled')
+    # _options.add_argument('--disable-blink-features=AutomationControlled')
     _options.add_argument("--disable-extensions")
     # _options.add_argument('--profile-directory=Default')
     _options.add_argument("--disable-plugins-discovery")
@@ -509,7 +516,7 @@ def init():
         if ARGS.verbose:
             print(f'[{color_text("blue", "*")}] Starting in hidden mode')
         configs["options"].add_argument("--headless")
-        configs["options"].add_argument("--start-maximized")
+    configs["options"].add_argument("--start-maximized")
 
     if ARGS.verbose:
         print(f'[{color_text("white", "*")}] Opening browser ...')
@@ -520,8 +527,6 @@ def init():
                          f'The executable "geckodriver" was not found or the browser "Firefox" is not installed.'))
         print(color_text("yellow", f"error details:\n{error}"))
     else:
-        # others arguments
-        engine.delete_all_cookies()
         return engine
 
 
@@ -532,6 +537,7 @@ def out_file(_input: list[str]):
         :param _input: The list that will be iterated over each line of the file, in this case it is the list of users.
     """
     for usr in _input:
+        usr = thin_out(usr)[1]
         file_name = rf"{usr}-{str(datetime.datetime.now())[:16]}.txt"
         if ARGS.compact:
             file_name = usr + ".txt"
@@ -574,7 +580,7 @@ if __name__ == '__main__':
         if ARGS.username:
             out_file(ARGS.username)
         elif ARGS.txt:
-            out_file(ARGS.txt)
+            out_file(upload_txt_file(ARGS.txt[0]))
         elif ARGS.id:
             out_file(ARGS.id)
     else:
@@ -586,11 +592,12 @@ if __name__ == '__main__':
                 print('-' * 60)
                 print(data)
             if count_profiles > 1:
-                print()
-                print("=" * 60)
-                print()
+                print("\n\n")
+                print("-" * 30, "{:^}".format("/" * 20), "-" * 28)
+                print("\n\n")
 
             if ARGS.several:
+                print("=" * 60)
                 print("EXTRAS:")
                 for data_extra in manager.get_extras()[profile].items():
                     print(f"{data_extra[0]:10}: {data_extra[1]}")
