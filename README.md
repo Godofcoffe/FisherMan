@@ -19,12 +19,6 @@ $ cd FisherMan
 
 # install the requeriments
 $ python3 -m pip install -r requeriments.txt
-
-# dependency:
- you need to install geckodriver on your machine,
- download the binary from the official mozilla repo:
- https://github.com/mozilla/geckodriver/releases/latest
- extract and copy the binary, i recommend placing it in /usr/bin
 ```
 
 ## Usage
