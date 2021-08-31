@@ -2,6 +2,7 @@
 
 import datetime
 import sys
+import json
 from argparse import ArgumentParser
 from base64 import b64decode
 from os import walk, remove, getcwd
@@ -25,7 +26,7 @@ from src.logo import name
 from src.manager import Manager, Xpaths
 
 module_name = 'FisherMan: Extract information from facebook profiles.'
-__version__ = "3.4.3"
+__version__ = "3.5.0"
 
 
 class Fisher:
@@ -34,63 +35,68 @@ class Fisher:
         exclusive_group = parser.add_mutually_exclusive_group()
         exclusive_group2 = parser.add_mutually_exclusive_group()
 
+        opt_search = parser.add_argument_group("search options")
+        opt_profile = parser.add_argument_group("profile options")
+        opt_login = parser.add_argument_group("credentials")
+        opt_out = parser.add_argument_group("output")
+        exclusive_filter = opt_search.add_mutually_exclusive_group()
+
         parser.add_argument('--version', action='version', version=f'%(prog)s {__version__}',
                             help='Shows the current version of the program.')
 
-        exclusive_group.add_argument('-u', '--username', action='store', nargs='+', required=False,
-                                     type=str, help='Defines one or more users for the search.')
+        exclusive_group.add_argument('-u', '--username', nargs='+', help='Defines one or more users for the search.')
 
-        exclusive_group.add_argument("-i", "--id", action="store", nargs="+", required=False, type=str,
-                                     help="Set the profile identification number.")
+        exclusive_group.add_argument("-i", "--id", nargs="+", help="Set the profile identification number.")
 
-        exclusive_group.add_argument('--use-txt', action='store', required=False, dest='txt', metavar='TXT_FILE',
-                                     type=str, nargs=1,
+        exclusive_group.add_argument('--use-txt', dest='txt', metavar='TXT_FILE', nargs=1,
                                      help='Replaces the USERNAME parameter with a user list in a txt.')
 
-        exclusive_group.add_argument("-S", "--search", action="store", required=False, metavar="USER",
-                                     help="It does a shallow search for the username. "
-                                          "Replace the spaces with '.'(period).")
+        exclusive_group.add_argument("-S", "--search", metavar="USER", help="It does a shallow search for the username."
+                                                                            " Replace the spaces with '.'(period).")
 
-        parser.add_argument('-sf', '--scrape-family', action='store_true', required=False, dest='scrpfm',
-                            help='If this parameter is passed, '
-                                 'the information from family members will be scraped if available.')
+        opt_profile.add_argument('-sf', '--scrape-family', action='store_true', dest='scrpfm',
+                                 help='If this parameter is passed, '
+                                      'the information from family members will be scraped if available.')
 
-        parser.add_argument("--specify", action="store", nargs="+", required=False, type=int,
-                            choices=(0, 1, 2, 3, 4, 5),
-                            help="Use the index number to return a specific part of the page. "
-                                 "about: 0, "
-                                 "about_contact_and_basic_info: 1, "
-                                 "about_family_and_relationships: 2, "
-                                 "about_details: 3, "
-                                 "about_work_and_education: 4, "
-                                 "about_places: 5.")
+        opt_profile.add_argument("--specify", nargs="+", type=int, choices=(0, 1, 2, 3, 4, 5),
+                                 help="Use the index number to return a specific part of the page. "
+                                      "about: 0, "
+                                      "about_contact_and_basic_info: 1, "
+                                      "about_family_and_relationships: 2, "
+                                      "about_details: 3, "
+                                      "about_work_and_education: 4, "
+                                      "about_places: 5.")
 
-        parser.add_argument("-s", "--several", action="store_true", required=False,
-                            help="Returns extra data like profile picture, number of followers and friends.")
+        opt_profile.add_argument("-s", "--several", action="store_true",
+                                 help="Returns extra data like profile picture, number of followers and friends.")
 
-        parser.add_argument('-b', '--browser', action='store_true', required=False,
-                            help='Opens the browser/bot.')
+        opt_search.add_argument("--filters", action="store_true",
+                                help="Shows the list of available filters.")
 
-        parser.add_argument('--email', action='store', metavar='EMAIL',
-                            required=False, type=str, nargs=1,
-                            help='If the profile is blocked, you can define your account, '
-                                 'however you have the search user in your friends list.')
+        exclusive_filter.add_argument("-work", help="Sets the work filter.")
+        exclusive_filter.add_argument("-education", help="Sets the education filter.")
+        exclusive_filter.add_argument("-city", help="Sets the city filter.")
 
-        parser.add_argument('--password', action='store', metavar='PASSWORD', dest='pwd', required=False, type=str,
-                            nargs=1,
-                            help='Set the password for your facebook account, '
-                                 'this parameter has to be used with --email.')
+        parser.add_argument('-b', '--browser', action='store_true', help='Opens the browser/bot.')
 
-        parser.add_argument('-o', '--file-output', action='store_true', required=False, dest='out',
-                            help='Save the output data to a .txt file.')
+        opt_login.add_argument('--email', metavar='EMAIL', nargs=1,
+                               help='If the profile is blocked, you can define your account, '
+                                    'however you have the search user in your friends list.')
 
-        parser.add_argument("-c", "--compact", action="store_true", required=False,
-                            help="Compress all .txt files. Use together with -o.")
+        opt_login.add_argument('--password', metavar='PASSWORD', dest='pwd', nargs=1,
+                               help='Set the password for your facebook account, '
+                                    'this parameter has to be used with --email.')
 
-        exclusive_group2.add_argument('-v', '-d', '--verbose', '--debug', action='store_true', required=False,
+        opt_out.add_argument('-o', '--file-output', action='store_true', dest='out',
+                             help='Save the output data to a .txt file.')
+
+        opt_out.add_argument("-c", "--compact", action="store_true",
+                             help="Compress all .txt files. Use together with -o.")
+
+        exclusive_group2.add_argument('-v', '-d', '--verbose', '--debug', action='store_true',
                                       help='It shows in detail the data search process.')
 
-        exclusive_group2.add_argument("-q", "--quiet", action="store_true", required=False,
+        exclusive_group2.add_argument("-q", "--quiet", action="store_true",
                                       help="Eliminates and simplifies some script outputs for "
                                            "a simpler and more discrete visualization.")
 
@@ -117,6 +123,14 @@ def update():
                 print(color_text("yellow", "Update Available!"))
     except Exception as error:
         print(color_text('red', f"A problem occured while checking for an update: {error}"))
+
+
+def show_filters():
+    with open("filters.json", "r") as json_file:
+        for tag in json.load(json_file).items():
+            print(f"{tag[0]}:")
+            for t in tag[1]:
+                print("\t", t)
 
 
 def upload_txt_file(name_file: str):
@@ -168,7 +182,21 @@ def check_connection():
 
 def search(brw: Firefox, user: str):
     parameter = user.replace(".", "%20")
-    brw.get(f"{manager.get_search_prefix()}{parameter}")
+
+    with open("filters.json", "r") as jsonfile:
+        filters = json.load(jsonfile)
+    if ARGS.work or ARGS.education or ARGS.city:
+        suffix = "&filters="
+        great_filter = ""
+        if ARGS.work is not None:
+            great_filter += filters["Work"][ARGS.work]
+        if ARGS.education is not None:
+            great_filter += filters["Education"][ARGS.education]
+        if ARGS.city is not None:
+            great_filter += filters["City"][ARGS.city]
+        brw.get(f"{manager.get_search_prefix()}{parameter}{suffix + great_filter}")
+    else:
+        brw.get(f"{manager.get_search_prefix()}{parameter}")
     if ARGS.verbose:
         print(f'[{color_text("white", "+")}] entering the search page')
     sleep(2)
@@ -584,6 +612,9 @@ if __name__ == '__main__':
     manager = Manager()
     ARGS = fs.args
     update()
+    if ARGS.filters:
+        show_filters()
+        sys.exit(0)
     browser = init()
     try:
         login(browser)
@@ -599,8 +630,6 @@ if __name__ == '__main__':
         raise error
     finally:
         browser.quit()
-    print()
-
     if ARGS.out:  # .txt output creation
         if ARGS.username:
             out_file(ARGS.username)
