@@ -17,6 +17,9 @@ $ git clone https://github.com/Godofcoffe/FisherMan
 # change the working directory to FisherMan
 $ cd FisherMan
 
+# change the branch
+$ git switch compatible-with-windows
+
 # install the requeriments
 $ python3 -m pip install -r requeriments.txt
 ```
