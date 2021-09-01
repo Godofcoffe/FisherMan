@@ -26,7 +26,7 @@ $ python3 -m pip install -r requeriments.txt
 
 ## Usage
 
-```
+```console
 $ python3 fisherman.py --help
 usage: fisherman.py [-h] [--version] [-u USERNAME [USERNAME ...] | -i ID
                     [ID ...] | --use-txt TXT_FILE | -S USER] [-sf]
