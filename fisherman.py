@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-import datetime
+from datetime import datetime
 import sys
 import json
 from argparse import ArgumentParser
@@ -9,7 +9,7 @@ from os import walk, remove, getcwd
 from pathlib import Path
 from re import findall
 from time import sleep
-from typing import Callable
+from typing import Callable, List, AnyStr, Tuple
 from zipfile import ZipFile, ZIP_DEFLATED
 
 import colorama
@@ -26,7 +26,7 @@ from src.logo import name
 from src.manager import Manager, Xpaths
 
 module_name = 'FisherMan: Extract information from facebook profiles.'
-__version__ = "3.5.0"
+__version__ = "3.6.0"
 
 
 class Fisher:
@@ -40,6 +40,7 @@ class Fisher:
         opt_login = parser.add_argument_group("credentials")
         opt_out = parser.add_argument_group("output")
         exclusive_filter = opt_search.add_mutually_exclusive_group()
+        exclusive_out = opt_out.add_mutually_exclusive_group()
 
         parser.add_argument('--version', action='version', version=f'%(prog)s {__version__}',
                             help='Shows the current version of the program.')
@@ -53,6 +54,13 @@ class Fisher:
 
         exclusive_group.add_argument("-S", "--search", metavar="USER", help="It does a shallow search for the username."
                                                                             " Replace the spaces with '.'(period).")
+
+        exclusive_group2.add_argument('-v', '-d', '--verbose', '--debug', action='store_true',
+                                      help='It shows in detail the data search process.')
+
+        exclusive_group2.add_argument("-q", "--quiet", action="store_true",
+                                      help="Eliminates and simplifies some script outputs for "
+                                           "a simpler and more discrete visualization.")
 
         opt_profile.add_argument('-sf', '--scrape-family', action='store_true', dest='scrpfm',
                                  help='If this parameter is passed, '
@@ -87,18 +95,11 @@ class Fisher:
                                help='Set the password for your facebook account, '
                                     'this parameter has to be used with --email.')
 
-        opt_out.add_argument('-o', '--file-output', action='store_true', dest='out',
-                             help='Save the output data to a .txt file.')
+        exclusive_out.add_argument('-o', '--file-output', action='store_true', dest='out',
+                                   help='Save the output data to a .txt file.')
 
-        opt_out.add_argument("-c", "--compact", action="store_true",
-                             help="Compress all .txt files. Use together with -o.")
-
-        exclusive_group2.add_argument('-v', '-d', '--verbose', '--debug', action='store_true',
-                                      help='It shows in detail the data search process.')
-
-        exclusive_group2.add_argument("-q", "--quiet", action="store_true",
-                                      help="Eliminates and simplifies some script outputs for "
-                                           "a simpler and more discrete visualization.")
+        exclusive_out.add_argument("-c", "--compact", action="store_true",
+                                   help="Save the output data to a .txt file and compress.")
 
         self.args = parser.parse_args()
         if not self.args.quiet:
@@ -133,7 +134,7 @@ def show_filters():
                 print("\t", t)
 
 
-def upload_txt_file(name_file: str):
+def upload_txt_file(name_file: AnyStr):
     """
         Load a file to replace the username parameter.
 
@@ -155,11 +156,14 @@ def upload_txt_file(name_file: str):
         raise Exception(color_text("red", "INVALID FILE!"))
 
 
-def compact():
+def compact(_list: List[AnyStr]):
     """
         Compress all .txt with the exception of requirements.txt.
     """
-    with ZipFile(f"{str(datetime.datetime.now())[:16]}.zip", "w", ZIP_DEFLATED) as zip_output:
+    out_file(_list)
+    if ARGS.verbose:
+        print(f'[{color_text("white", "*")}] preparing compaction...')
+    with ZipFile(f"{str(datetime.now())[:16]}.zip", "w", ZIP_DEFLATED) as zip_output:
         for _, _, files in walk(getcwd()):
             for archive in files:
                 extension = Path(archive).suffix
@@ -180,7 +184,7 @@ def check_connection():
         raise Exception("There is no internet connection.")
 
 
-def search(brw: Firefox, user: str):
+def search(brw: Firefox, user: AnyStr):
     parameter = user.replace(".", "%20")
 
     with open("filters.json", "r") as jsonfile:
@@ -230,7 +234,7 @@ def search(brw: Firefox, user: str):
         print()
 
 
-def extra_data(brw: Firefox, user: str):
+def extra_data(brw: Firefox, user: AnyStr):
     """
         Save other data outside the about user page.
 
@@ -247,7 +251,7 @@ def extra_data(brw: Firefox, user: str):
     wbw = WebDriverWait(brw, 10)
     xpaths = Xpaths()
 
-    def collection_by_xpath(expected: Callable, xpath: str):
+    def collection_by_xpath(expected: Callable, xpath: AnyStr):
         try:
             wbw.until(expected((By.XPATH, xpath)))
         except exceptions.NoSuchElementException:
@@ -299,7 +303,7 @@ def extra_data(brw: Firefox, user: str):
         manager.add_extras(user, {"Bio": bio, "Followers": followers, "Friends": friends})
 
 
-def scrolling_by_element(brw: Firefox, locator: tuple, n: int = 30):
+def scrolling_by_element(brw: Firefox, locator: Tuple, n=30):
     """
         Scroll page by the number of elements.
 
@@ -322,7 +326,7 @@ def scrolling_by_element(brw: Firefox, locator: tuple, n: int = 30):
     return elements
 
 
-def thin_out(user: str):
+def thin_out(user: AnyStr):
     """
         Username Refiner.
 
@@ -341,7 +345,7 @@ def thin_out(user: str):
         return manager.get_url(), user
 
 
-def scrape(brw: Firefox, items: list[str]):
+def scrape(brw: Firefox, items: List[AnyStr]):
     """
         Extract certain information from the html of an item in the list provided.
 
@@ -583,7 +587,7 @@ def init():
             return engine
 
 
-def out_file(_input: list[str]):
+def out_file(_input: List[AnyStr]):
     """
         Create the .txt output of the -o parameter.
 
@@ -591,7 +595,7 @@ def out_file(_input: list[str]):
     """
     for usr in _input:
         usr = thin_out(usr)[1]
-        file_name = rf"{usr}-{str(datetime.datetime.now())[:16]}.txt"
+        file_name = rf"{usr}-{str(datetime.now())[:16]}.txt"
         if ARGS.compact:
             file_name = usr + ".txt"
         with open(file_name, 'w+') as file:
@@ -599,10 +603,6 @@ def out_file(_input: list[str]):
                 file.writelines(data_list)
 
     print(f'[{color_text("green", "+")}] .txt file(s) created')
-    if ARGS.compact:
-        if ARGS.verbose:
-            print(f'[{color_text("white", "*")}] preparing compaction...')
-        compact()
 
 
 if __name__ == '__main__':
@@ -615,6 +615,11 @@ if __name__ == '__main__':
     if ARGS.filters:
         show_filters()
         sys.exit(0)
+    if not ARGS.id and not ARGS.username and not ARGS.txt and not ARGS.search:
+        print(f"No input argument was used.")
+        print(f"Use an optional argument to run the script.")
+        print(f"See [-h, --help].")
+        sys.exit(1)
     browser = init()
     try:
         login(browser)
@@ -630,13 +635,22 @@ if __name__ == '__main__':
         raise error
     finally:
         browser.quit()
-    if ARGS.out:  # .txt output creation
+    if ARGS.out:
         if ARGS.username:
             out_file(ARGS.username)
         elif ARGS.txt:
             out_file(upload_txt_file(ARGS.txt[0]))
         elif ARGS.id:
             out_file(ARGS.id)
+
+    elif ARGS.compact:
+        if ARGS.username:
+            compact(ARGS.username)
+        elif ARGS.txt:
+            compact(upload_txt_file(ARGS.txt[0]))
+        elif ARGS.id:
+            compact(ARGS.id)
+
     else:
         if ARGS.id or ARGS.username or ARGS.txt:
             print(color_text('green', 'Information found:'))

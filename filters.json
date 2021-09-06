@@ -2,18 +2,31 @@
     "City":
     {
         "Rio de Janeiro": "eyJjaXR5OjAiOiJ7XCJuYW1lXCI6XCJ1c2Vyc19sb2NhdGlvblwiLFwiYXJnc1wiOlwiMTEwMzQ2OTU1NjUzNDc5XCJ9In0%3D",
-        "São paulo": "eyJjaXR5OjAiOiJ7XCJuYW1lXCI6XCJ1c2Vyc19sb2NhdGlvblwiLFwiYXJnc1wiOlwiMTEyMDQ3Mzk4ODE0Njk3XCJ9In0%3D"
+        "São paulo": "eyJjaXR5OjAiOiJ7XCJuYW1lXCI6XCJ1c2Vyc19sb2NhdGlvblwiLFwiYXJnc1wiOlwiMTEyMDQ3Mzk4ODE0Njk3XCJ9In0%3D",
+        "Bascons, Aquitaine, France": "eyJjaXR5OjAiOiJ7XCJuYW1lXCI6XCJ1c2Vyc19sb2NhdGlvblwiLFwiYXJnc1wiOlwiMTExMDQ0NDA4OTI1NDk3XCJ9In0%3D",
+        "São joão de Meriti": "eyJjaXR5OjAiOiJ7XCJuYW1lXCI6XCJ1c2Vyc19sb2NhdGlvblwiLFwiYXJnc1wiOlwiMTEzNjUzNzk1MzExODE0XCJ9In0%3D",
+        "Barcs": "eyJjaXR5OjAiOiJ7XCJuYW1lXCI6XCJ1c2Vyc19sb2NhdGlvblwiLFwiYXJnc1wiOlwiMTA4MjQxOTgyNTMwMzI3XCJ9In0%3D",
+        "Duque de Caxias, Rio de Janeiro": "eyJjaXR5OjAiOiJ7XCJuYW1lXCI6XCJ1c2Vyc19sb2NhdGlvblwiLFwiYXJnc1wiOlwiMTUwMzIyNzIxNjU3NjY0N1wifSJ9",
+        "San Francisco, California": "eyJjaXR5OjAiOiJ7XCJuYW1lXCI6XCJ1c2Vyc19sb2NhdGlvblwiLFwiYXJnc1wiOlwiMTE0OTUyMTE4NTE2OTQ3XCJ9In0%3D",
+        "San Francisco, Zulia, Venezuela": "eyJjaXR5OjAiOiJ7XCJuYW1lXCI6XCJ1c2Vyc19sb2NhdGlvblwiLFwiYXJnc1wiOlwiMTA4Njg2NzI5MTU0Mzk3XCJ9In0%3D",
+        "Eslöv": "eyJjaXR5OjAiOiJ7XCJuYW1lXCI6XCJ1c2Vyc19sb2NhdGlvblwiLFwiYXJnc1wiOlwiMTA5MDEyMDAyNDU2OTIzXCJ9In0%3D"
     },
 
     "Education":
     {
         "UFRJ": "eyJzY2hvb2w6MCI6IntcIm5hbWVcIjpcInVzZXJzX3NjaG9vbFwiLFwiYXJnc1wiOlwiOTEyNDk0MTU1NDUyOTA5XCJ9In0%3D",
-        "Oxford": "eyJzY2hvb2w6MCI6IntcIm5hbWVcIjpcInVzZXJzX3NjaG9vbFwiLFwiYXJnc1wiOlwiMTY2ODY2MTAxMDZcIn0ifQ"
+        "Oxford": "eyJzY2hvb2w6MCI6IntcIm5hbWVcIjpcInVzZXJzX3NjaG9vbFwiLFwiYXJnc1wiOlwiMTY2ODY2MTAxMDZcIn0ifQ",
+        "Ferris State University": "eyJzY2hvb2w6MCI6IntcIm5hbWVcIjpcInVzZXJzX3NjaG9vbFwiLFwiYXJnc1wiOlwiNTk4MTMwNDk5NVwifSJ9",
+        "Facultad de Ciencias de la Salud": "eyJzY2hvb2w6MCI6IntcIm5hbWVcIjpcInVzZXJzX3NjaG9vbFwiLFwiYXJnc1wiOlwiMTAwOTkzMzQ1NjY0NzQ0XCJ9In0%3D"
     },
 
     "Work":
     {
         "Facebook APP": "eyJlbXBsb3llcjowIjoie1wibmFtZVwiOlwidXNlcnNfZW1wbG95ZXJcIixcImFyZ3NcIjpcIjEyMzczOTMyNzY1Mzg0MFwifSJ9",
-        "Havard University": "eyJlbXBsb3llcjowIjoie1wibmFtZVwiOlwidXNlcnNfZW1wbG95ZXJcIixcImFyZ3NcIjpcIjEwNTkzMDY1MTYwNlwifSJ9"
+        "Havard University": "eyJlbXBsb3llcjowIjoie1wibmFtZVwiOlwidXNlcnNfZW1wbG95ZXJcIixcImFyZ3NcIjpcIjEwNTkzMDY1MTYwNlwifSJ9",
+        "News International Buffet": "eyJlbXBsb3llcjowIjoie1wibmFtZVwiOlwidXNlcnNfZW1wbG95ZXJcIixcImFyZ3NcIjpcIjEwMDIyNTU2MDA2NTk5MFwifSJ9",
+        "Telenor Myanmar": "eyJlbXBsb3llcjowIjoie1wibmFtZVwiOlwidXNlcnNfZW1wbG95ZXJcIixcImFyZ3NcIjpcIjYwMzc0MjA3Mjk5MjU3M1wifSJ9",
+        "Sony Entertainment Television": "eyJlbXBsb3llcjowIjoie1wibmFtZVwiOlwidXNlcnNfZW1wbG95ZXJcIixcImFyZ3NcIjpcIjEyMjA2OTY5NDQ4MjQ2OVwifSJ9",
+        "Polishop": "eyJlbXBsb3llcjowIjoie1wibmFtZVwiOlwidXNlcnNfZW1wbG95ZXJcIixcImFyZ3NcIjpcIjEwMjE5NTUzNTI5MTQ3NlwifSJ9"
     }
 }
