@@ -21,13 +21,13 @@ $ cd FisherMan
 $ git switch compatible-with-windows
 
 # install the requeriments
-$ python3 -m pip install -r requeriments.txt
+$ py -m pip install -r requeriments.txt
 ```
 
 ## Usage
 
 ```console
-$ python3 fisherman.py --help
+$ py fisherman.py --help
 usage: fisherman.py [-h] [--version] [-u USERNAME [USERNAME ...] | -i ID
                     [ID ...] | --use-txt TXT_FILE | -S USER] [-v | -q] [-sf]
                     [--specify {0,1,2,3,4,5} [{0,1,2,3,4,5} ...]] [-s]
@@ -87,8 +87,8 @@ output:
 
 To search for a user:
 
-* User name: `python3 fisherman.py -u name name.profile name.profile2`
-* ID: `python3 fisherman.py -i 000000000000`
+* User name: `py fisherman.py -u name name.profile name.profile2`
+* ID: `py fisherman.py -i 000000000000`
 
 The username must be found on the facebook profile link, such as:
 
@@ -99,57 +99,55 @@ https://facebook.com/name.profile/
 It is also possible to load multiple usernames from a .txt file, this can be useful for a brute force output type:
 
 ```
-python3 fisherman.py --use-txt filename.txt
+py fisherman.py --use-txt filename.txt
 ```
 
 Some profiles are limited to displaying your information for any account, so you can use your account to extract. Note:
 this should be used as the last hypothesis, and the target profile must be on your friends list:
 
 ```
-python3 fisherman.py --email youremail@email.com --password yourpass
+py fisherman.py --email youremail@email.com --password yourpass
 ```
 
 ### Some situations:
 
 * For complete massive scrape:
   ```
-  python3 fisherman.py --use-txt file -c -sf
+  py fisherman.py --use-txt file -c -sf
   ```
   With a file with dozens of names on each line, you can make a complete "scan" taking your information and even your
   family members and will be compressed into a .zip at the output.
 
 
 * For specific parts of the account:
-    * Basic data: `python3 fisherman.py -u name --specify 0`
-    * Family and relationship: `python3 -u name --specify 2`
-    * It is still possible to mix: `python3 fisherman.py -u name --specify 0 2`
+    * Basic data: `py fisherman.py -u name --specify 0`
+    * Family and relationship: `py -u name --specify 2`
+    * It is still possible to mix: `py fisherman.py -u name --specify 0 2`
 
 
 * To get additional things like profile picture, how many followers and how many friends:
   ```
-  python3 fisherman.py -u name [-s | --several]
+  py fisherman.py -u name [-s | --several]
   ```
   
 * For a short search by people's name:
   ```
-  python3 fisherman.py [-S | --search] foo
+  py fisherman.py [-S | --search] foo
   ```
   Replace the spaces in the name with "."(periods).
   The script returns around 30 profiles.
 
 * To filter the search:
   ```
-  python3 fisherman.py -S name -work fisherman
+  py fisherman.py -S name -work fisherman
   ```
   If the filter has spaces, enclose it in quotes.
   
 * For a minimalist execution:
   ```
-  python3 fisherman.py [-q | --quiet]
+  py fisherman.py [-q | --quiet]
   ```
   Considerably reduces the script's output texts and, by convention, improves performance.
-
-## If you are using windows: [source](https://github.com/Godofcoffe/FisherMan/tree/compatible-with-windows)
 
 ## Contributing
 I would love to have your help in developing this project.
