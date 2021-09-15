@@ -113,7 +113,7 @@ python3 fisherman.py --email youremail@email.com --password yourpass
 
 * For complete massive scrape:
   ```
-  python3 fisherman.py --use-txt file -o -c -sf
+  python3 fisherman.py --use-txt file -c -sf
   ```
   With a file with dozens of names on each line, you can make a complete "scan" taking your information and even your
   family members and will be compressed into a .zip at the output.
