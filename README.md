@@ -6,7 +6,7 @@
 
 ### Search for public profile information on Facebook
 
-[![asciicast](https://asciinema.org/a/434026.svg)](https://asciinema.org/a/434026)
+![demo-gif](demo-fisherman.gif)
 
 ## Installation
 
