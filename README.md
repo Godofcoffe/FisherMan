@@ -31,9 +31,10 @@ $ python3 -m pip install -r requeriments.txt
 
 ```console
 $ python3 fisherman.py --help
-usage: fisherman.py [-h] [--version] [--update] [-u USERNAME [USERNAME ...] |
-                    -i ID [ID ...] | --use-txt TXT_FILE | -S USER] [-v | -q]
-                    [-sf] [--specify {0,1,2,3,4,5} [{0,1,2,3,4,5} ...]] [-s]
+usage: fisherman.py [-h] [--version] [-u USERNAME [USERNAME ...] | -i ID
+                    [ID ...] | --use-txt TXT_FILE | -S USER] [--update]
+                    [-v | -q] [-sf]
+                    [--specify {0,1,2,3,4,5} [{0,1,2,3,4,5} ...]] [-s]
                     [--filters]
                     [-work WORK | -education EDUCATION | -city CITY] [-b]
                     [--email EMAIL] [--password PASSWORD] [-o | -c]
@@ -43,8 +44,6 @@ FisherMan: Extract information from facebook profiles. (Version 3.7.0)
 optional arguments:
   -h, --help            show this help message and exit
   --version             Shows the current version of the program.
-  --update              Check for changes with the remote repository to
-                        update.
   -u USERNAME [USERNAME ...], --username USERNAME [USERNAME ...]
                         Defines one or more users for the search.
   -i ID [ID ...], --id ID [ID ...]
@@ -54,6 +53,8 @@ optional arguments:
   -S USER, --search USER
                         It does a shallow search for the username. Replace the
                         spaces with '.'(period).
+  --update              Check for changes with the remote repository to
+                        update.
   -v, --verbose         It shows in detail the data search process.
   -q, --quiet           Eliminates and simplifies some script outputs for a
                         simpler and more discrete visualization.
