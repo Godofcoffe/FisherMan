@@ -45,9 +45,6 @@ class Fisher:
         parser.add_argument('--version', action='version', version=f'%(prog)s {__version__}',
                             help='Shows the current version of the program.')
 
-        parser.add_argument("--update", action="store_true",
-                            help="Check for changes with the remote repository to update.")
-
         exclusive_group.add_argument('-u', '--username', nargs='+', help='Defines one or more users for the search.')
 
         exclusive_group.add_argument("-i", "--id", nargs="+", help="Set the profile identification number.")
@@ -57,6 +54,9 @@ class Fisher:
 
         exclusive_group.add_argument("-S", "--search", metavar="USER", help="It does a shallow search for the username."
                                                                             " Replace the spaces with '.'(period).")
+        
+        parser.add_argument("--update", action="store_true",
+                            help="Check for changes with the remote repository to update.")
 
         exclusive_group2.add_argument('-v', '--verbose', action='store_true',
                                       help='It shows in detail the data search process.')
