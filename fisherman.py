@@ -135,8 +135,8 @@ def update():
         r2 = requests.get("https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/filters.json")
         if r2.text != open("filters.json").read():
             print(color_text("yellow", "New filters have been added."))
-    except:
-        raise Exception
+    except Exception as error2:
+        print(color_text("red", f"A problem occurred when checking the filters.json file.{error2}"))
 
 
 def upgrade_filters():
