@@ -43,7 +43,8 @@ FisherMan: Extract information from facebook profiles. (Version 3.7.0)
 optional arguments:
   -h, --help            show this help message and exit
   --version             Shows the current version of the program.
-  --update              Refresh the search filters
+  --update              Check for changes with the remote repository to
+                        update.
   -u USERNAME [USERNAME ...], --username USERNAME [USERNAME ...]
                         Defines one or more users for the search.
   -i ID [ID ...], --id ID [ID ...]
@@ -85,7 +86,6 @@ credentials:
 output:
   -o, --file-output     Save the output data to a .txt file.
   -c, --compact         Save the output data to a .txt file and compress.
-
 ```
 
 To search for a user:
