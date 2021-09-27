@@ -179,8 +179,10 @@ def sub_update(func):
             print(color_text("red", f"A problem occurred when checking the {file} file.\n{error2}"))
 
 
-@sub_update
-def upgrade_filters(file, **kwargs):
+def upgrade_filters():
+    """
+        Rewrite the filters.json file.
+    """
     r3 = requests.get("https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/filters.json")
     if r3.status_code == requests.codes.OK:
         with open("filters.json", "w") as new_filters:
