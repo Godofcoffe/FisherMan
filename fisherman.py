@@ -133,6 +133,34 @@ def update():
         print(color_text('red', f"A problem occured while checking for an update: {error}"))
 
 
+def control(**kwargs):
+    """
+        Controls the flow of file updates.
+
+        Use the key as an identifier for the function and this key will be displayed if the conditions are met,
+        and use the function itself to rewrite the value.
+    """
+    start = []
+    for process in kwargs.values():
+        start.append(sub_update(process))
+
+    for something_positive in start:
+        if any(something_positive):
+            print("Updates are available:")
+            if __queue__:
+                for func in __queue__:
+                    for key in kwargs.keys():
+                        if key in func.__name__:
+                            print(key)
+                print()
+                choose = input("Continue?[Y/N]: ").strip().lower()[0]
+                if choose == "y":
+                    for obsolete in __queue__:
+                        obsolete()
+            else:
+                print("nothing to update")
+
+
 def sub_update(func):
     """
         Differentiates the contents of the local file with the remote file.
@@ -631,9 +659,7 @@ if __name__ == '__main__':
     ARGS = fs.args
     if ARGS.update:
         update()
-        choose = input("Continue?[Y/N]: ").strip().lower()[0]
-        if choose == "y":
-            upgrade_filters()
+        control(filters=upgrade_filters)  # add more parameters as you add files to update.
         sys.exit(0)
     if ARGS.filters:
         show_filters()
