@@ -322,7 +322,7 @@ def extra_data(brw: Firefox, user: AnyStr):
         friends = element
 
     if ARGS.txt:
-        _file_name = rf"extraData-{user}-{str(datetime.datetime.now())[:16]}.txt"
+        _file_name = rf"extraData-{user}-{str(datetime.now())[:16]}.txt"
         if ARGS.compact:
             _file_name = f"extraData-{user}.txt"
         with open(_file_name, "w+") as extra:
