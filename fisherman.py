@@ -114,7 +114,7 @@ class Fisher:
 
 def update():
     """
-        Checks for changes on the remote server.
+        checks changes from the main script to the remote server..
     """
     try:
         r = requests.get("https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/fisherman.py")
