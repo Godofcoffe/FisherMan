@@ -6,7 +6,8 @@
 
 ### Search for public profile information on Facebook
 
-![demo-gif](demo-fisherman.gif)
+![demo-gif](https://upload.wikimedia.org/wikipedia/commons/b/b9/Youtube_loading_symbol_1_(wobbly).gif)
+(gif in preparation.)
 
 ## Installation
 
