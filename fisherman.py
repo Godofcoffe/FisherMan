@@ -164,19 +164,32 @@ def control(**kwargs):
 def sub_update(func):
     """
         Differentiates the contents of the local file with the remote file.
+
+        :param func: function for the rewriting process.
+
+        Just put the function you want to update a file from the remote server,
+        for convenience put the name of the file in the function name, it can be anywhere,
+        as long as the words are separated by underscores.
     """
-    def check(file, **kwargs):
-        message = kwargs.get("message")
-        try:
-            r2 = requests.get(f"https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/{file}")
-            if r2.text != open(f"{file}").read():
-                if message is None:
-                    print(color_text("yellow", f"Changes in the {file} file have been found."))
-                else:
-                    print(color_text("yellow", message))
-                __queue__.append(func)
-        except Exception as error2:
-            print(color_text("red", f"A problem occurred when checking the {file} file.\n{error2}"))
+    file_name = func.__name__.split("_")
+
+    def check(file):
+        for _, _, files in walk("."):
+            for file_ in files:
+                for F in file_name:
+                    if F in (Path(file_).name, Path(file_).name.upper(), Path(file_).name.title()):
+                        try:
+                            r2 = requests.get(f"https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/{file}")
+                            if r2.text != open(f"{file}").read():
+                                print(color_text("yellow", f"Changes in the {file} file have been found."))
+                                __queue__.append(func)
+                        except Exception as error2:
+                            print(color_text("red", f"A problem occurred when checking the {file} file.\n{error2}"))
+                        return True
+                    else:
+                        return False
+
+    return (check(F) for F in file_name)
 
 
 def upgrade_filters():
