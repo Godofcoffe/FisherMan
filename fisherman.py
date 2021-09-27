@@ -27,6 +27,7 @@ from src.manager import Manager, Xpaths
 
 module_name = 'FisherMan: Extract information from facebook profiles.'
 __version__ = "3.7.0"
+__queue__ = []
 
 
 class Fisher:
@@ -54,7 +55,7 @@ class Fisher:
 
         exclusive_group.add_argument("-S", "--search", metavar="USER", help="It does a shallow search for the username."
                                                                             " Replace the spaces with '.'(period).")
-        
+
         parser.add_argument("--update", action="store_true",
                             help="Check for changes with the remote repository to update.")
 
@@ -131,15 +132,27 @@ def update():
     except Exception as error:
         print(color_text('red', f"A problem occured while checking for an update: {error}"))
 
-    try:
-        r2 = requests.get("https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/filters.json")
-        if r2.text != open("filters.json").read():
-            print(color_text("yellow", "New filters have been added."))
-    except Exception as error2:
-        print(color_text("red", f"A problem occurred when checking the filters.json file.{error2}"))
+
+def sub_update(func):
+    """
+        Differentiates the contents of the local file with the remote file.
+    """
+    def check(file, **kwargs):
+        message = kwargs.get("message")
+        try:
+            r2 = requests.get(f"https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/{file}")
+            if r2.text != open(f"{file}").read():
+                if message is None:
+                    print(color_text("yellow", f"Changes in the {file} file have been found."))
+                else:
+                    print(color_text("yellow", message))
+                __queue__.append(func)
+        except Exception as error2:
+            print(color_text("red", f"A problem occurred when checking the {file} file.\n{error2}"))
 
 
-def upgrade_filters():
+@sub_update
+def upgrade_filters(file, **kwargs):
     r3 = requests.get("https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/filters.json")
     if r3.status_code == requests.codes.OK:
         with open("filters.json", "w") as new_filters:
