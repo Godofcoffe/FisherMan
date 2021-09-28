@@ -209,7 +209,7 @@ def show_filters():
     """
         Shows the available filters.
     """
-    with open("filters.json", "r") as json_file:
+    with open("filters.json") as json_file:
         for tag in json.load(json_file).items():
             print(f"{tag[0]}:")
             for t in tag[1]:
@@ -228,7 +228,7 @@ def upload_txt_file(name_file: AnyStr):
         name_file += ".txt"
     if Path(name_file).is_file():
         try:
-            with open(name_file, 'r') as txt:
+            with open(name_file) as txt:
                 users_txt = [line.replace("\n", "") for line in txt.readlines()]
         except Exception as error:
             print(color_text('red', f'An error has occurred: {error}'))
@@ -275,7 +275,7 @@ def search(brw: Firefox, user: AnyStr):
     """
     parameter = user.replace(".", "%20")
 
-    with open("filters.json", "r") as jsonfile:
+    with open("filters.json") as jsonfile:
         filters = json.load(jsonfile)
     if ARGS.work or ARGS.education or ARGS.city:
         suffix = "&filters="
