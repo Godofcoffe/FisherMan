@@ -16,7 +16,8 @@ import colorama
 import requests
 import requests.exceptions
 from selenium.common import exceptions
-from selenium.webdriver import Firefox, FirefoxOptions, FirefoxProfile
+from selenium.webdriver import Firefox
+from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
@@ -612,15 +613,14 @@ def init():
     """
 
     # browser settings
-    _profile = FirefoxProfile()
-    _options = FirefoxOptions()
+    _options = Options()
 
     # eliminate pop-ups
-    _profile.set_preference("dom.popup_maximum", 0)
-    _profile.set_preference("privacy.popups.showBrowserMessage", False)
+    _options.set_preference("dom.popup_maximum", 0)
+    _options.set_preference("privacy.popups.showBrowserMessage", False)
 
     # incognito
-    _profile.set_preference("browser.privatebrowsing.autostart", True)
+    _options.set_preference("browser.privatebrowsing.autostart", True)
     _options.add_argument("--incognito")
 
     # arguments
@@ -629,17 +629,16 @@ def init():
     # _options.add_argument('--profile-directory=Default')
     _options.add_argument("--disable-plugins-discovery")
 
-    configs = {"firefox_profile": _profile, "options": _options}
     if not ARGS.browser:
         if ARGS.verbose:
             print(f'[{color_text("blue", "*")}] Starting in hidden mode')
-        configs["options"].add_argument("--headless")
-    configs["options"].add_argument("--start-maximized")
+        _options.headless = True
+    _options.add_argument("--start-maximized")
 
     if ARGS.verbose:
         print(f'[{color_text("white", "*")}] Opening browser ...')
     try:
-        engine = Firefox(**configs)
+        engine = Firefox(options=_options)
     except Exception as error:
         print(color_text("red",
                          f'The executable "geckodriver" was not found or the browser "Firefox" is not installed.'))
