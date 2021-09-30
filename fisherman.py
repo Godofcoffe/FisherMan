@@ -173,24 +173,23 @@ def sub_update(func):
         as long as the words are separated by underscores.
     """
     file_name = func.__name__.split("_")
+    valid = []
 
-    def check(file):
-        for _, _, files in walk("."):
-            for file_ in files:
-                for F in file_name:
-                    if F in (Path(file_).name, Path(file_).name.upper(), Path(file_).name.title()):
-                        try:
-                            r2 = requests.get(f"https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/{file}")
-                            if r2.text != open(f"{file}").read():
-                                print(color_text("yellow", f"Changes in the {file} file have been found."))
-                                __queue__.append(func)
-                        except Exception as error2:
-                            print(color_text("red", f"A problem occurred when checking the {file} file.\n{error2}"))
-                        return True
-                    else:
-                        return False
-
-    return (check(F) for F in file_name)
+    for _, _, files in walk(getcwd()):
+        for file_ in files:
+            for F in file_name:
+                if F in file_:
+                    try:
+                        r2 = requests.get(f"https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/{file_}")
+                        if r2.text != open(f"{file_}").read():
+                            print(color_text("yellow", f"Changes in the {file_} file have been found."))
+                            __queue__.append(func)
+                            valid.append(True)
+                        else:
+                            valid.append(False)
+                    except Exception as error2:
+                        print(color_text("red", f"A problem occurred when checking the {file_} file.\n{error2}"))
+    return valid
 
 
 def upgrade_filters():
