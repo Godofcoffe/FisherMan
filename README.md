@@ -164,6 +164,7 @@ Some things you can help me with:
 Please look at the Wiki entry on [Adding filters to the search argument](https://github.com/Godofcoffe/FisherMan/wiki/Adding-filters-to-the-search-argument) to understand the issues.
 
 ## *This tool only extracts information that is public, not use for private or illegal purposes.*
+_This is a legacy project, I have no guarantee that its functionality will be working in the future, because it does not apply some of Selenium's best practices._
 
 ## LICENSE
 
