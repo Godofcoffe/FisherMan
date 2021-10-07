@@ -609,32 +609,29 @@ def init():
     """
         Start the webdriver.
     """
-    if "win" in sys.platform:
-        # browser options
-        _options = Chrome_options()
-        _options.add_argument("--incognito")
-        _options.add_argument("--disable-extensions")
-        _options.add_argument("--disable-plugins-discovery")
+    # browser options
+    _options = Chrome_options()
+    _options.add_argument("--incognito")
+    _options.add_argument("--disable-extensions")
+    _options.add_argument("--disable-plugins-discovery")
 
-        if not ARGS.browser:
-            if ARGS.verbose:
-                print(f'[{color_text("blue", "*")}] Starting in hidden mode')
-            _options.add_argument("--headless")
-        else:
-            _options.add_argument("--start-maximized")
-
+    if not ARGS.browser:
         if ARGS.verbose:
-            print(f'[{color_text("white", "*")}] Opening browser ...')
-        try:
-            engine = Chrome(options=_options, executable_path="./bin/chromedriver.exe")
-        except Exception as error:
-            print(color_text("red",
-                             f'The executable "chromedriver" was not found or the browser "Chrome" is not installed.'))
-            print(color_text("yellow", f"error details:\n{error}"))
-        else:
-            return engine
+            print(f'[{color_text("blue", "*")}] Starting in hidden mode')
+        _options.add_argument("--headless")
     else:
+        _options.add_argument("--start-maximized")
+
+    if ARGS.verbose:
+        print(f'[{color_text("white", "*")}] Opening browser ...')
+    try:
+        engine = Chrome(options=_options, executable_path="./bin/chromedriver.exe")
+    except:
+        print(color_text("red",
+                         f'The executable "chromedriver" was not found or the browser "Chrome" is not installed.'))
+        print("Trying with the Firefox browser.")
         # browser settings
+        del _options
         _options = Firefox_options()
 
         # eliminate pop-ups
@@ -668,6 +665,8 @@ def init():
             print(color_text("yellow", f"error details:\n{error}"))
         else:
             return engine
+    else:
+        return engine
 
 
 def out_file(_input: List[AnyStr]):
