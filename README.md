@@ -1,12 +1,12 @@
 # FisherMan
 
 [![GitHub license](https://img.shields.io/github/license/Godofcoffe/FisherMan)](https://github.com/Godofcoffe/FisherMan/blob/main/LICENSE)
-![badge](https://img.shields.io/badge/version-3.6.0-blue)
+![badge](https://img.shields.io/badge/version-3.7.0-blue)
 ![badge](https://img.shields.io/badge/python-%3E%3D3.8-orange)
 
 ### Search for public profile information on Facebook
 
-[![asciicast](https://asciinema.org/a/434026.svg)](https://asciinema.org/a/434026)
+![demo-gif](demo-fisherman.gif)
 
 ## Installation
 
@@ -29,13 +29,14 @@ $ py -m pip install -r requeriments.txt
 ```console
 $ py fisherman.py --help
 usage: fisherman.py [-h] [--version] [-u USERNAME [USERNAME ...] | -i ID
-                    [ID ...] | --use-txt TXT_FILE | -S USER] [-v | -q] [-sf]
+                    [ID ...] | --use-txt TXT_FILE | -S USER] [--update]
+                    [-v | -q] [-sf]
                     [--specify {0,1,2,3,4,5} [{0,1,2,3,4,5} ...]] [-s]
                     [--filters]
                     [-work WORK | -education EDUCATION | -city CITY] [-b]
                     [--email EMAIL] [--password PASSWORD] [-o | -c]
 
-FisherMan: Extract information from facebook profiles. (Version 3.6.0)
+FisherMan: Extract information from facebook profiles. (Version 3.7.0)
 
 optional arguments:
   -h, --help            show this help message and exit
@@ -49,8 +50,9 @@ optional arguments:
   -S USER, --search USER
                         It does a shallow search for the username. Replace the
                         spaces with '.'(period).
-  -v, -d, --verbose, --debug
-                        It shows in detail the data search process.
+  --update              Check for changes with the remote repository to
+                        update.
+  -v, --verbose         It shows in detail the data search process.
   -q, --quiet           Eliminates and simplifies some script outputs for a
                         simpler and more discrete visualization.
   -b, --browser         Opens the browser/bot.
@@ -82,7 +84,6 @@ credentials:
 output:
   -o, --file-output     Save the output data to a .txt file.
   -c, --compact         Save the output data to a .txt file and compress.
-
 ```
 
 To search for a user:
@@ -158,6 +159,7 @@ Some things you can help me with:
 Please look at the Wiki entry on [Adding filters to the search argument](https://github.com/Godofcoffe/FisherMan/wiki/Adding-filters-to-the-search-argument) to understand the issues.
 
 ## *This tool only extracts information that is public, not use for private or illegal purposes.*
+_This is a legacy project, I have no guarantee that its functionality will be working in the future, because it does not apply some of Selenium's best practices._
 
 ## LICENSE
 

@@ -1,10 +1,10 @@
 #! /usr/bin/env python3
 
-from datetime import datetime
-import sys
 import json
+import sys
 from argparse import ArgumentParser
 from base64 import b64decode
+from datetime import datetime
 from os import walk, remove, getcwd
 from pathlib import Path
 from re import findall
@@ -16,7 +16,10 @@ import colorama
 import requests
 import requests.exceptions
 from selenium.common import exceptions
-from selenium.webdriver import Firefox, FirefoxOptions, FirefoxProfile, Chrome, ChromeOptions
+from selenium.webdriver.chrome.options import Options as Chrome_options
+from selenium.webdriver.firefox import options
+from selenium.webdriver.firefox.options import Options as Firefox_options
+from selenium.webdriver import Firefox, FirefoxOptions, FirefoxProfile, Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
@@ -26,7 +29,8 @@ from src.logo import name
 from src.manager import Manager, Xpaths
 
 module_name = 'FisherMan: Extract information from facebook profiles.'
-__version__ = "3.6.0"
+__version__ = "3.7.0"
+__queue__ = []
 
 
 class Fisher:
@@ -55,7 +59,10 @@ class Fisher:
         exclusive_group.add_argument("-S", "--search", metavar="USER", help="It does a shallow search for the username."
                                                                             " Replace the spaces with '.'(period).")
 
-        exclusive_group2.add_argument('-v', '-d', '--verbose', '--debug', action='store_true',
+        parser.add_argument("--update", action="store_true",
+                            help="Check for changes with the remote repository to update.")
+
+        exclusive_group2.add_argument('-v', '--verbose', action='store_true',
                                       help='It shows in detail the data search process.')
 
         exclusive_group2.add_argument("-q", "--quiet", action="store_true",
@@ -109,6 +116,9 @@ class Fisher:
 
 
 def update():
+    """
+        checks changes from the main script to the remote server..
+    """
     try:
         r = requests.get("https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/fisherman.py")
 
@@ -126,8 +136,81 @@ def update():
         print(color_text('red', f"A problem occured while checking for an update: {error}"))
 
 
+def control(**kwargs):
+    """
+        Controls the flow of file updates.
+
+        Use the key as an identifier for the function and this key will be displayed if the conditions are met,
+        and use the function itself to rewrite the value.
+    """
+    start = []
+    for process in kwargs.values():
+        start.append(sub_update(process))
+
+    for something_positive in start:
+        if any(something_positive):
+            print("Updates are available:")
+            if __queue__:
+                for func in __queue__:
+                    for key in kwargs.keys():
+                        if key in func.__name__:
+                            print(key)
+                print()
+                choose = input("Continue?[Y/N]: ").strip().lower()[0]
+                if choose == "y":
+                    for obsolete in __queue__:
+                        obsolete()
+            else:
+                print("nothing to update")
+
+
+def sub_update(func):
+    """
+        Differentiates the contents of the local file with the remote file.
+
+        :param func: function for the rewriting process.
+
+        Just put the function you want to update a file from the remote server,
+        for convenience put the name of the file in the function name, it can be anywhere,
+        as long as the words are separated by underscores.
+    """
+    file_name = func.__name__.split("_")
+    valid = []
+
+    for _, _, files in walk(getcwd()):
+        for file_ in files:
+            for F in file_name:
+                if F in file_:
+                    try:
+                        r2 = requests.get(f"https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/{file_}")
+                        if r2.text != open(f"{file_}").read():
+                            print(color_text("yellow", f"Changes in the {file_} file have been found."))
+                            __queue__.append(func)
+                            valid.append(True)
+                        else:
+                            valid.append(False)
+                    except Exception as error2:
+                        print(color_text("red", f"A problem occurred when checking the {file_} file.\n{error2}"))
+    return valid
+
+
+def upgrade_filters():
+    """
+        Rewrite the filters.json file.
+    """
+    r3 = requests.get("https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/filters.json")
+    if r3.status_code == requests.codes.OK:
+        with open("filters.json", "w") as new_filters:
+            new_filters.write(r3.text)
+    else:
+        r3.raise_for_status()
+
+
 def show_filters():
-    with open("filters.json", "r") as json_file:
+    """
+        Shows the available filters.
+    """
+    with open("filters.json") as json_file:
         for tag in json.load(json_file).items():
             print(f"{tag[0]}:")
             for t in tag[1]:
@@ -146,7 +229,7 @@ def upload_txt_file(name_file: AnyStr):
         name_file += ".txt"
     if Path(name_file).is_file():
         try:
-            with open(name_file, 'r') as txt:
+            with open(name_file) as txt:
                 users_txt = [line.replace("\n", "") for line in txt.readlines()]
         except Exception as error:
             print(color_text('red', f'An error has occurred: {error}'))
@@ -168,7 +251,7 @@ def compact(_list: List[AnyStr]):
             for archive in files:
                 extension = Path(archive).suffix
                 _file_name = archive.replace(extension, "")
-                if (extension.lower() == ".txt" and _file_name != "requeriments") or extension.lower() == ".jpeg":
+                if (extension.lower() == ".txt" and _file_name != "requeriments") or extension.lower() == ".png":
                     zip_output.write(archive)
                     remove(archive)
     print(f'[{color_text("green", "+")}] successful compression')
@@ -185,18 +268,24 @@ def check_connection():
 
 
 def search(brw: Firefox, user: AnyStr):
+    """
+        It searches by the person's name.
+
+        :param brw: Instance of WebDriver.
+        :param user: name to search.
+    """
     parameter = user.replace(".", "%20")
 
-    with open("filters.json", "r") as jsonfile:
+    with open("filters.json") as jsonfile:
         filters = json.load(jsonfile)
     if ARGS.work or ARGS.education or ARGS.city:
         suffix = "&filters="
         great_filter = ""
         if ARGS.work is not None:
             great_filter += filters["Work"][ARGS.work]
-        if ARGS.education is not None:
+        elif ARGS.education is not None:
             great_filter += filters["Education"][ARGS.education]
-        if ARGS.city is not None:
+        elif ARGS.city is not None:
             great_filter += filters["City"][ARGS.city]
         brw.get(f"{manager.get_search_prefix()}{parameter}{suffix + great_filter}")
     else:
@@ -291,7 +380,7 @@ def extra_data(brw: Firefox, user: AnyStr):
         friends = element
 
     if ARGS.txt:
-        _file_name = rf"extraData-{user}-{str(datetime.datetime.now())[:16]}.txt"
+        _file_name = rf"extraData-{user}-{str(datetime.now())[:16]}.txt"
         if ARGS.compact:
             _file_name = f"extraData-{user}.txt"
         with open(_file_name, "w+") as extra:
@@ -477,7 +566,6 @@ def login(brw: Firefox):
         elif ARGS.quiet:
             print(f'[{color_text("yellow", "*")}] An error occurred, restarting.')
 
-        brw.delete_all_cookies()
         brw.get(manager.get_url())
     finally:
         if brw.current_url != manager.get_url():
@@ -526,7 +614,7 @@ def init():
     """
     if "win" in sys.platform:
         # browser options
-        _options = ChromeOptions()
+        _options = Chrome_options()
         _options.add_argument("--incognito")
         _options.add_argument("--disable-extensions")
         _options.add_argument("--disable-plugins-discovery")
@@ -550,15 +638,14 @@ def init():
             return engine
     else:
         # browser settings
-        _profile = FirefoxProfile()
-        _options = FirefoxOptions()
+        _options = Firefox_options()
 
         # eliminate pop-ups
-        _profile.set_preference("dom.popup_maximum", 0)
-        _profile.set_preference("privacy.popups.showBrowserMessage", False)
+        _options.set_preference("dom.popup_maximum", 0)
+        _options.set_preference("privacy.popups.showBrowserMessage", False)
 
         # incognito
-        _profile.set_preference("browser.privatebrowsing.autostart", True)
+        _options.set_preference("browser.privatebrowsing.autostart", True)
         _options.add_argument("--incognito")
 
         # arguments
@@ -567,18 +654,17 @@ def init():
         # _options.add_argument('--profile-directory=Default')
         _options.add_argument("--disable-plugins-discovery")
 
-        configs = {"firefox_profile": _profile, "options": _options}
         if not ARGS.browser:
             if ARGS.verbose:
                 print(f'[{color_text("blue", "*")}] Starting in hidden mode')
-            configs["options"].add_argument("--headless")
+            _options.add_argument("--headless")
         else:
-            configs["options"].add_argument("--start-maximized")
+            _options.add_argument("--start-maximized")
 
         if ARGS.verbose:
             print(f'[{color_text("white", "*")}] Opening browser ...')
         try:
-            engine = Firefox(**configs)
+            engine = Firefox(options=_options)
         except Exception as error:
             print(color_text("red",
                              f'The executable "geckodriver" was not found or the browser "Firefox" is not installed.'))
@@ -611,14 +697,17 @@ if __name__ == '__main__':
     fs = Fisher()
     manager = Manager()
     ARGS = fs.args
-    update()
+    if ARGS.update:
+        update()
+        control(filters=upgrade_filters)  # add more parameters as you add files to update.
+        sys.exit(0)
     if ARGS.filters:
         show_filters()
         sys.exit(0)
     if not ARGS.id and not ARGS.username and not ARGS.txt and not ARGS.search:
         print(f"No input argument was used.")
         print(f"Use an optional argument to run the script.")
-        print(f"See [-h, --help].")
+        print(f"Use --help.")
         sys.exit(1)
     browser = init()
     try:
