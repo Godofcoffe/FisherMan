@@ -1,5 +1,3 @@
-#! /usr/bin/env python3
-
 import json
 import sys
 from argparse import ArgumentParser
@@ -16,11 +14,10 @@ import colorama
 import requests
 import requests.exceptions
 from selenium.common import exceptions
+from selenium.webdriver import Firefox, Chrome
 from selenium.webdriver.chrome.options import Options as Chrome_options
-from selenium.webdriver.firefox import options
-from selenium.webdriver.firefox.options import Options as Firefox_options
-from selenium.webdriver import Firefox, FirefoxOptions, FirefoxProfile, Chrome
 from selenium.webdriver.common.by import By
+from selenium.webdriver.firefox.options import Options as Firefox_options
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
