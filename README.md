@@ -1,7 +1,7 @@
 # FisherMan
 
 [![GitHub license](https://img.shields.io/github/license/Godofcoffe/FisherMan)](https://github.com/Godofcoffe/FisherMan/blob/main/LICENSE)
-![badge](https://img.shields.io/badge/version-3.7.0-blue)
+![badge](https://img.shields.io/badge/version-3.7.1-blue)
 ![badge](https://img.shields.io/badge/python-%3E%3D3.8-orange)
 
 ### Search for public profile information on Facebook
@@ -24,6 +24,19 @@ $ git switch compatible-with-windows
 $ py -m pip install -r requeriments.txt
 ```
 
+## Docker
+
+### Build
+
+```console
+docker build . -t fisherman
+```
+
+### run
+```console
+docker run --rm -it fisherman --help
+```
+
 ## Usage
 
 ```console
@@ -36,7 +49,7 @@ usage: fisherman.py [-h] [--version] [-u USERNAME [USERNAME ...] | -i ID
                     [-work WORK | -education EDUCATION | -city CITY] [-b]
                     [--email EMAIL] [--password PASSWORD] [-o | -c]
 
-FisherMan: Extract information from facebook profiles. (Version 3.7.0)
+FisherMan: Extract information from facebook profiles. (Version 3.7.1)
 
 optional arguments:
   -h, --help            show this help message and exit

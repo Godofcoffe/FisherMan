@@ -26,7 +26,7 @@ from src.logo import name
 from src.manager import Manager, Xpaths
 
 module_name = 'FisherMan: Extract information from facebook profiles.'
-__version__ = "3.7.0"
+__version__ = "3.7.1"
 __queue__ = []
 
 
@@ -355,11 +355,12 @@ def extra_data(brw: Firefox, user: AnyStr):
     if not ARGS.quiet:
         print(f'[{color_text("green", "+")}] picture saved')
 
-    element = collection_by_xpath(ec.visibility_of_element_located, xpaths.bio).text
-    if element:
-        bio = element
-    else:
+    try:
+        element = collection_by_xpath(ec.visibility_of_element_located, xpaths.bio).text
+    except AttributeError:
         bio = None
+    else:
+        bio = element
 
     if collection_by_xpath(ec.visibility_of_element_located, xpaths.followers) is not None:
         followers = str(collection_by_xpath(ec.visibility_of_element_located, xpaths.followers).text).split()[0]

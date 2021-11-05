@@ -22,40 +22,40 @@ class Xpaths:
 
 class Manager:
     def __init__(self):
-        self.__url__ = 'https://www.facebook.com/'
-        self.__id_url_prefix__ = "https://www.facebook.com/profile.php?id="
-        self.__prefix_url_search__ = "https://www.facebook.com/search/people/?q="
-        self.__fake_email__ = 'submarino.sub.aquatico@outlook.com'
-        self.__password__ = 'MDBjbGVwdG9tYW5pYWNvMDA='
-        self.__data__ = {}
-        self.__affluent__ = {}
-        self.__extras__ = {}
+        self.__url = 'https://www.facebook.com/'
+        self.__id_url_prefix = "https://www.facebook.com/profile.php?id="
+        self.__prefix_url_search = "https://www.facebook.com/search/people/?q="
+        self.__fake_email = 'submarino.sub.aquatico@outlook.com'
+        self.__password = 'MDBjbGVwdG9tYW5pYWNvMDA='
+        self.__data = {}
+        self.__affluent = {}
+        self.__extras = {}
 
     def clean_all(self):
         """
             Clear all data.
         """
-        self.__data__.clear()
-        self.__affluent__.clear()
-        self.__extras__.clear()
+        self.__data.clear()
+        self.__affluent.clear()
+        self.__extras.clear()
 
     def clean_data(self):
         """
             Clear dict data.
         """
-        self.__data__.clear()
+        self.__data.clear()
 
     def clean_affluent(self):
         """
             Clear affluent data.
         """
-        self.__affluent__.clear()
+        self.__affluent.clear()
 
     def clean_extras(self):
         """
             Clear extras data.
         """
-        self.__extras__.clear()
+        self.__extras.clear()
 
     def set_email(self, string: str):
         """
@@ -63,7 +63,7 @@ class Manager:
 
             :param string: Email.
         """
-        self.__fake_email__ = string
+        self.__fake_email = string
 
     def set_pass(self, string: str):
         """
@@ -71,7 +71,7 @@ class Manager:
 
             :param string: Password.
         """
-        self.__password__ = string
+        self.__password = string
 
     def set_data(self, dictionary: dict):
         """
@@ -79,23 +79,23 @@ class Manager:
 
             :param dictionary: dict to update.
         """
-        self.__data__ = dictionary
+        self.__data = dictionary
 
     def set_affluent(self, dictionary: dict):
         """
-            Updates the data in __affluent__ in its entirety.
+            Updates the data in __affluent in its entirety.
 
             :param dictionary: dict to update.
         """
-        self.__affluent__ = dictionary
+        self.__affluent = dictionary
 
     def set_extras(self, dictionary: dict):
         """
-            Updates the data in __extras__ in its entirety.
+            Updates the data in __extras in its entirety.
 
             :param dictionary: dict to update.
         """
-        self.__extras__ = dictionary
+        self.__extras = dictionary
 
     def add_data(self, key, item):
         """
@@ -104,25 +104,25 @@ class Manager:
             :param key: identification key.
             :param item: data to be assigned to key.
         """
-        self.__data__[key] = item
+        self.__data[key] = item
 
     def add_affluent(self, key, item):
         """
-            Add a data in __affluent__ with an identifying key.
+            Add a data in __affluent with an identifying key.
 
             :param key: identification key.
             :param item: data to be assigned to key.
         """
-        self.__affluent__[key] = item
+        self.__affluent[key] = item
 
     def add_extras(self, key, item):
         """
-            Add a data in __extras__ with an identifying key.
+            Add a data in __extras with an identifying key.
 
             :param key: identification key.
             :param item: data to be assigned to key.
         """
-        self.__extras__[key] = item
+        self.__extras[key] = item
 
     def get_url(self):
         """
@@ -130,7 +130,7 @@ class Manager:
 
             :return: default page.
         """
-        return self.__url__
+        return self.__url
 
     def get_id_prefix(self):
         """
@@ -138,7 +138,7 @@ class Manager:
 
             :return: link prefix
         """
-        return self.__id_url_prefix__
+        return self.__id_url_prefix
 
     def get_search_prefix(self):
         """
@@ -146,7 +146,7 @@ class Manager:
 
             :return: search prefix
         """
-        return self.__prefix_url_search__
+        return self.__prefix_url_search
 
     def get_email(self):
         """
@@ -154,7 +154,7 @@ class Manager:
 
             :return: default email.
         """
-        return self.__fake_email__
+        return self.__fake_email
 
     def get_pass(self):
         """
@@ -162,31 +162,31 @@ class Manager:
 
             :return: default password.
         """
-        return self.__password__
+        return self.__password
 
     def get_data(self):
         """
             Returns all datas.
 
-            :return: __data__.
+            :return: __data.
         """
-        return self.__data__
+        return self.__data
 
     def get_affluent(self):
         """
             Returns all affluents.
 
-            :return: __affluent__.
+            :return: __affluent.
         """
-        return self.__affluent__
+        return self.__affluent
 
     def get_extras(self):
         """
             Returns all extras.
 
-            :return: __extras__.
+            :return: __extras.
         """
-        return self.__extras__
+        return self.__extras
 
     def get_all_keys(self):
         """
@@ -199,7 +199,7 @@ class Manager:
             For an individual:
             data = self.get_all_keys()[1]
         """
-        return self.__extras__.keys(), self.__affluent__.keys(), self.__data__.keys()
+        return self.__extras.keys(), self.__affluent.keys(), self.__data.keys()
 
     def get_all_values(self):
         """
@@ -212,4 +212,4 @@ class Manager:
             For an individual:
             data = self.get_all_items()[1]
         """
-        return self.__extras__.values(), self.__affluent__.values(), self.__data__.values()
+        return self.__extras.values(), self.__affluent.values(), self.__data.values()
