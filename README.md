@@ -27,6 +27,19 @@ $ python3 -m pip install -r requeriments.txt
  extract and copy the binary, i recommend placing it in /usr/bin
 ```
 
+## Docker
+
+### Build
+
+```console
+docker build . -t fisherman
+```
+
+### run
+```console
+docker run --rm -it fisherman --help
+```
+
 ## Usage
 
 ```console
