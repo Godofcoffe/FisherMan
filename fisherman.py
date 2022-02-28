@@ -81,5 +81,62 @@ def parser():
     return parser.parse_args()
 
 
-little_fish = Fisher(parser=parser())
-browser = little_fish._boot()
+cli = parser()
+little_fish = Fisher(parser=cli)
+
+if cli.filters:
+    little_fish.show_filters()
+elif any((cli.id, cli.username, cli.search, cli.txt)):
+    browser = little_fish._boot()
+    try:
+        login(browser)
+    except Exception as error:
+        print(error)
+    else:
+        if cli.search:
+            search(browser, cli.search)
+        else:
+            if cli.txt:
+                scrape(browser, upload_txt_file(cli.txt[0]))
+            elif cli.username:
+                scrape(browser, cli.username)
+            elif cli.id:
+                scrape(browser, cli.id)
+            print(color_text('green', 'Information found:'))
+            count_profiles = len(little_fish.get_all_keys()[2])
+            for profile in little_fish.get_all_keys()[2]:
+                for data in little_fish.get_data()[profile]:
+                    print('-' * 60)
+                    print(data)
+                if count_profiles > 1:
+                    print("\n\n")
+                    print("-" * 30, "{:^}".format("/" * 20), "-" * 28)
+                    print("\n\n")
+
+                if cli.several:
+                    print("=" * 60)
+                    print("EXTRAS:")
+                    for data_extra in little_fish.get_extras()[profile].items():
+                        print(f"{data_extra[0]:10}: {data_extra[1]}")
+    finally:
+        browser.quit()
+
+    if cli.out:
+        if cli.username:
+            out_file(cli.username)
+        elif cli.txt:
+            out_file(upload_txt_file(cli.txt[0]))
+        elif cli.id:
+            out_file(cli.id)
+
+    elif cli.compact:
+        if cli.username:
+            compact(cli.username)
+        elif cli.txt:
+            compact(upload_txt_file(cli.txt[0]))
+        elif cli.id:
+            compact(cli.id)
+else:
+    print(f"No input argument was used.")
+    print(f"Use an optional argument to run the script.")
+    print(f"Use --help.")
