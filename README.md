@@ -1,7 +1,7 @@
 # FisherMan
 
 [![GitHub license](https://img.shields.io/github/license/Godofcoffe/FisherMan)](https://github.com/Godofcoffe/FisherMan/blob/main/LICENSE)
-![badge](https://img.shields.io/badge/version-3.7.1-blue)
+![badge](https://img.shields.io/badge/version-3.8-blue)
 ![badge](https://img.shields.io/badge/python-%3E%3D3.8-orange)
 
 ### Search for public profile information on Facebook
@@ -44,62 +44,60 @@ docker run --rm -it fisherman --help
 
 ```console
 $ python3 fisherman.py --help
-usage: fisherman.py [-h] [--version] [-u USERNAME [USERNAME ...] | -i ID
-                    [ID ...] | --use-txt TXT_FILE | -S USER] [--update]
-                    [-v | -q] [-sf]
-                    [--specify {0,1,2,3,4,5} [{0,1,2,3,4,5} ...]] [-s]
+usage: fisherman.py [-h] [--version] [-u [USERNAME ...] | -i [ID ...] |
+                    --use-txt TXT_FILE | -S USER] [--update] [--blackout]
+                    [-v | -q] [-sf] [--specify [{0,1,2,3,4,5} ...]] [-s]
                     [--filters]
                     [-work WORK | -education EDUCATION | -city CITY] [-b]
                     [--email EMAIL] [--password PASSWORD] [-o | -c]
 
-FisherMan: Extract information from facebook profiles. (Version 3.7.1)
+FisherMan: Extract information from facebook profiles. (Version 3.8)
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
-  --version             Shows the current version of the program.
-  -u USERNAME [USERNAME ...], --username USERNAME [USERNAME ...]
-                        Defines one or more users for the search.
-  -i ID [ID ...], --id ID [ID ...]
-                        Set the profile identification number.
-  --use-txt TXT_FILE    Replaces the USERNAME parameter with a user list in a
-                        txt.
+  --version             shows the current version of the program
+  -u [USERNAME ...], --username [USERNAME ...]
+                        defines one or more users for the search
+  -i [ID ...], --id [ID ...]
+                        set the profile identification number
+  --use-txt TXT_FILE    replaces the USERNAME parameter with a user list in a
+                        txt
   -S USER, --search USER
-                        It does a shallow search for the username. Replace the
-                        spaces with '.'(period).
-  --update              Check for changes with the remote repository to
-                        update.
-  -v, --verbose         It shows in detail the data search process.
-  -q, --quiet           Eliminates and simplifies some script outputs for a
-                        simpler and more discrete visualization.
-  -b, --browser         Opens the browser/bot.
+                        it does a shallow search for the username. Replace the
+                        spaces with '.'(period)
+  --update              check for changes with the remote repository to update
+  --blackout            disable colors
+  -v, --verbose         it shows in detail the data search process
+  -q, --quiet           eliminates and simplifies some script outputs for a
+                        simpler and discrete visualization
+  -b, --browser         opens the browser/bot
 
 search options:
-  --filters             Shows the list of available filters.
-  -work WORK            Sets the work filter.
-  -education EDUCATION  Sets the education filter.
-  -city CITY            Sets the city filter.
+  --filters             shows the list of available filters
+  -work WORK            sets the work filter
+  -education EDUCATION  sets the education filter
+  -city CITY            sets the city filter
 
 profile options:
-  -sf, --scrape-family  If this parameter is passed, the information from
-                        family members will be scraped if available.
-  --specify {0,1,2,3,4,5} [{0,1,2,3,4,5} ...]
-                        Use the index number to return a specific part of the
-                        page. about: 0, about_contact_and_basic_info: 1,
-                        about_family_and_relationships: 2, about_details: 3,
-                        about_work_and_education: 4, about_places: 5.
-  -s, --several         Returns extra data like profile picture, number of
-                        followers and friends.
+  -sf, --scrape-family  if this parameter is passed, the information from
+                        family members will be scraped if available
+  --specify [{0,1,2,3,4,5} ...]
+                        use the index number to return a specific part of the
+                        page
+  -s, --several         returns extra data like profile picture, number of
+                        followers and friends
 
 credentials:
-  --email EMAIL         If the profile is blocked, you can define your
+  --email EMAIL         if the profile is blocked, you can define your
                         account, however you have the search user in your
-                        friends list.
-  --password PASSWORD   Set the password for your facebook account, this
-                        parameter has to be used with --email.
+                        friends list
+  --password PASSWORD   set the password for your facebook account, this
+                        parameter HAS to be used with --email
 
 output:
-  -o, --file-output     Save the output data to a .txt file.
-  -c, --compact         Save the output data to a .txt file and compress.
+  -o, --file-output     save the output data to a .txt file
+  -c, --compact         save the output data to a .txt file and compress
+
 ```
 
 To search for a user:
@@ -135,12 +133,19 @@ python3 fisherman.py --email youremail@email.com --password yourpass
   With a file with dozens of names on each line, you can make a complete "scan" taking your information and even your
   family members and will be compressed into a .zip at the output.
 
-
 * For specific parts of the account:
     * Basic data: `python3 fisherman.py -u name --specify 0`
     * Family and relationship: `python3 -u name --specify 2`
     * It is still possible to mix: `python3 fisherman.py -u name --specify 0 2`
-
+    * Association of the pages:
+      ```
+      about: 0
+      about_contact_and_basic_info: 1
+      about_family_and_relationships: 2
+      about_details: 3
+      about_work_and_education: 4
+      about_places: 5
+      ```
 
 * To get additional things like profile picture, how many followers and how many friends:
   ```
@@ -149,7 +154,7 @@ python3 fisherman.py --email youremail@email.com --password yourpass
   
 * For a short search by people's name:
   ```
-  python3 fisherman.py [-S | --search] foo
+  python3 fisherman.py [-S | --search] The.Fisherman
   ```
   Replace the spaces in the name with "."(periods).
   The script returns around 30 profiles.
