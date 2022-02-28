@@ -7,7 +7,10 @@ from src.fisherman.FisherMan import Fisher, __version__, module_name
 
 
 def parser():
-    parser = ArgumentParser(description=f'{module_name} (Version {__version__})')
+    footer = "If you want to see examples of usage and a specific argument.\n" \
+             "See: https://github.com/Godofcoffe/FisherMan#usage"
+
+    parser = ArgumentParser(description=f'{module_name} (Version {__version__})', epilog=footer)
     exclusive_group = parser.add_mutually_exclusive_group()
     exclusive_group2 = parser.add_mutually_exclusive_group()
 
