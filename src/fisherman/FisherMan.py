@@ -43,6 +43,7 @@ class Fisher(Manager):
         self.check_connection()
         if self.args.update:
             self.update()
+            control(filters=upgrade_filters)  # add more parameters as you add files to update.
 
 
     def update(self):
