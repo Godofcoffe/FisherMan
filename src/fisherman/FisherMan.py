@@ -32,7 +32,10 @@ class Fisher(Manager):
     def __init__(self, parser):
         self.args = parser
         if not self.args.quiet:
-            print(color_text('cyan', name))
+            if not self.args.blackout:
+                print(color_text('cyan', name))
+            else:
+                print(name)
         else:
             print("Starting FisherMan...")
         if not self.args.blackout:
@@ -54,14 +57,24 @@ class Fisher(Manager):
 
             if remote_version != local_version:
                 if not self.args.quiet:
-                    print(color_text('yellow', "Update Available!\n" +
-                                    f"You are running version {local_version}. Version {remote_version} "
-                                    f"is available at https://github.com/Godofcoffe/FisherMan"))
+                    if not self.args.blackout:
+                        print(color_text('yellow', "Update Available!\n" +
+                                        f"You are running version {local_version}. Version {remote_version} "
+                                        f"is available at https://github.com/Godofcoffe/FisherMan"))
+                    else:
+                        print("Update Available!\n" +
+                             f"You are running version {local_version}. Version {remote_version} "
+                             f"is available at https://github.com/Godofcoffe/FisherMan")
                 else:
-                    print(color_text("yellow", "Update Available!"))
+                    if not self.args.blackout:
+                        print(color_text("yellow", "Update Available!"))
+                    else:
+                        print("Update Available!")
         except Exception as error:
-            print(color_text('red', f"A problem occured while checking for an update: {error}"))
-
+            if not self.args.blackout:
+                print(color_text('red', f"A problem occured while checking for an update: {error}"))
+            else:
+                print(f"A problem occured while checking for an update: {error}")
 
     def __control(self, **kwargs):
         """
@@ -111,13 +124,19 @@ class Fisher(Manager):
                         try:
                             r2 = requests.get(f"https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/{file_}")
                             if r2.text != open(f"{file_}").read():
-                                print(color_text("yellow", f"Changes in the {file_} file have been found."))
+                                if not self.args.blackout:
+                                    print(color_text("yellow", f"Changes in the {file_} file have been found."))
+                                else:
+                                    print(f"Changes in the {file_} file have been found.")
                                 __queue__.append(func)
                                 valid.append(True)
                             else:
                                 valid.append(False)
                         except Exception as error2:
-                            print(color_text("red", f"A problem occurred when checking the {file_} file.\n{error2}"))
+                            if not self.args.blackout:
+                                print(color_text("red", f"A problem occurred when checking the {file_} file.\n{error2}"))
+                            else:
+                                print(f"A problem occurred when checking the {file_} file.\n{error2}")
         return valid
 
 
@@ -159,11 +178,16 @@ class Fisher(Manager):
                 with open(name_file) as txt:
                     users_txt = [line.replace("\n", "") for line in txt.readlines()]
             except Exception as error:
-                print(color_text('red', f'An error has occurred: {error}'))
+                if not self.args.blackout:
+                    print(color_text('red', f'An error has occurred: {error}'))
+                else:
+                    print(f'An error has occurred: {error}')
             else:
                 return users_txt
         else:
-            raise Exception(color_text("red", "INVALID FILE!"))
+            raise Exception(
+                    color_text("red", "INVALID FILE!") if not self.args.blackout else print("INVALID FILE!")
+                )
 
 
     def __compact(self, _list: List[AnyStr]):
@@ -172,7 +196,10 @@ class Fisher(Manager):
         """
         __out_file(_list)
         if self.args.verbose:
-            print(f'[{color_text("white", "*")}] preparing compaction...')
+            if not self.args.blackout:
+                print(f'[{color_text("white", "*")}] preparing compaction...')
+            else:
+                print('[*] preparing compaction...')
         with ZipFile(f"{str(datetime.now()):%d-%m-%yy-%h-%M}.zip", "w", ZIP_DEFLATED) as zip_output:
             for _, _, files in walk(getcwd()):
                 for archive in files:
@@ -181,7 +208,10 @@ class Fisher(Manager):
                     if (extension.lower() == ".txt" and _file_name != "requeriments") or extension.lower() == ".png":
                         zip_output.write(archive)
                         remove(archive)
-        print(f'[{color_text("green", "+")}] successful compression')
+        if not self.args.blackout:
+            print(f'[{color_text("green", "+")}] successful compression')
+        else:
+            print('[+] successful compression')
 
 
     def check_connection(self):
@@ -220,14 +250,23 @@ class Fisher(Manager):
             brw.get(f"{self.get_search_prefix()}{parameter}")
 
         if self.args.verbose:
-            print(f'[{color_text("white", "+")}] entering the search page')
+            if not self.args.blackout:
+                print(f'[{color_text("white", "+")}] entering the search page')
+            else:
+                print('[+] entering the search page')
         sleep(2)
         profiles = __scrolling_by_element(browser, (By.CSS_SELECTOR, "[role='article']"))
         if self.args.verbose:
-            print(f'[{color_text("green", "+")}] loaded profiles: {color_text("green", len(profiles))}')
+            if not self.args.blackout:
+                print(f'[{color_text("green", "+")}] loaded profiles: {color_text("green", len(profiles))}')
+            else:
+                print(f'[+] loaded profiles: {len(profiles)}')
 
 
-        print(color_text("green", "Profiles found..."))
+        if not self.args.blackout:
+            print(color_text("green", "Profiles found..."))
+        else:
+            print('Profiles found...')
         print()
         for profile in profiles:
             try:
@@ -235,21 +274,30 @@ class Fisher(Manager):
             except (exceptions.StaleElementReferenceException, AttributeError, exceptions.NoSuchElementException):
                 pass
             else:
-                print(color_text("green", "Name:"), title.text)
+                if not self.args.blackout:
+                    print(color_text("green", "Name:"), title.text)
+                else:
+                    print("Name: ", title.text)
 
             try:
                 info = profile.find_element_by_class_name("jktsbyx5").text
             except (exceptions.NoSuchElementException, exceptions.StaleElementReferenceException):
                 pass
             else:
-                print(color_text("green", "Info:"), str(info).replace("\n", ", "))
+                if not self.args.blackout:
+                    print(color_text("green", "Info:"), str(info).replace("\n", ", "))
+                else:
+                    print('Info: ', str(info).replace("\n", ", "))
 
             try:
                 link = str(title.find_element_by_css_selector("a[href]").get_attribute("href")).replace("\n", "")
             except (AttributeError, UnboundLocalError):
                 pass
             else:
-                print(color_text("green", "user|id:"), link)
+                if not self.args.blackout:
+                    print(color_text("green", "user|id:"), link)
+                else:
+                    print('user|id: ', link)
             print()
 
 
@@ -274,19 +322,31 @@ class Fisher(Manager):
             try:
                 wbw.until(expected((By.XPATH, xpath)))
             except exceptions.NoSuchElementException:
-                print(f'[{color_text("red", "-")}] non-existent element')
+                if not self.args.blackout:
+                    print(f'[{color_text("red", "-")}] non-existent element')
+                else:
+                    print('[-] non-existent element')
             except exceptions.TimeoutException:
                 if self.args.verbose:
-                    print(f'[{color_text("yellow", "-")}] timed out to get the extra data')
+                    if not self.args.blackout:
+                        print(f'[{color_text("yellow", "-")}] timed out to get the extra data')
+                    else:
+                        print('[-] timed out to get the extra data')
                 else:
-                    print(f'[{color_text("yellow", "-")}] time limit exceeded')
+                    if not self.args.blackout:
+                        print(f'[{color_text("yellow", "-")}] time limit exceeded')
+                    else:
+                        print('[-] time limit exceeded')
             else:
                 return brw.find_element_by_xpath(xpath)
 
         img = collection_by_xpath(ec.element_to_be_clickable, xpaths.picture)
         img.screenshot(f"{user}_profile_picture.png")
         if not self.args.quiet:
-            print(f'[{color_text("green", "+")}] picture saved')
+            if not self.args.blackout:
+                print(f'[{color_text("green", "+")}] picture saved')
+            else:
+                print('[+] picture saved')
 
         try:
             element = collection_by_xpath(ec.visibility_of_element_located, xpaths.bio).text
@@ -304,7 +364,10 @@ class Fisher(Manager):
             element = collection_by_xpath(ec.visibility_of_element_located, xpaths.friends)
             element = element.find_elements_by_tag_name("span")[2].text
         except IndexError:
-            print(f'[{color_text("red", "-")}] There is no number of friends to catch')
+            if not self.args.blackout:
+                print(f'[{color_text("red", "-")}] There is no number of friends to catch')
+            else:
+                print('[-] There is no number of friends to catch')
         except:
             friends = None
         else:
@@ -382,7 +445,10 @@ class Fisher(Manager):
             prefix, usrs = __thin_out(usrs)
             temp_data = []
             if not self.args.quiet:
-                print(f'[{color_text("white", "*")}] Coming in {prefix + usrs}')
+                if not self.args.blackout:
+                    print(f'[{color_text("white", "*")}] Coming in {prefix + usrs}')
+                else:
+                    print(f'[*] coming in {prefix + usrs}')
 
             # here modifies the branch list to iterate only the parameter items --specify
             if self.args.specify:
@@ -390,13 +456,19 @@ class Fisher(Manager):
                 for index in self.args.specify:
                     temp_branch.append(branch[index])
                     if self.args.verbose:
-                        print(f'[{color_text("green", "+")}] branch {index} added to url')
+                        if not self.args.blackout:
+                            print(f'[{color_text("green", "+")}] branch {index} added to url')
+                        else:
+                            print(f'[+] branch {index} added to url')
                 branch = temp_branch
 
             # search for extra data
             if self.args.several:
                 if self.args.verbose:
-                    print(f'[{color_text("blue", "+")}] getting extra data...')
+                    if not self.args.blackout:
+                        print(f'[{color_text("blue", "+")}] getting extra data...')
+                    else:
+                        print('[+] getting extra data...')
                 _extra_data(brw, usrs)
 
             tot = len(branch)
@@ -407,21 +479,39 @@ class Fisher(Manager):
                     output = wbw.until(ec.presence_of_element_located((By.CLASS_NAME, 'f7vcsfb0')))
 
                 except exceptions.TimeoutException:
-                    print(f'[{color_text("yellow", "-")}] time limit exceeded')
+                    if not self.args.blackout:
+                        print(f'[{color_text("yellow", "-")}] time limit exceeded')
+                    else:
+                        print('[-] time limit exceeded')
 
                 except Exception as error:
-                    print(f'[{color_text("red", "-")}] class f7vcsfb0 did not return')
+                    if not self.args.blackout:
+                        print(f'[{color_text("red", "-")}] class f7vcsfb0 did not return')
+                    else:
+                        print('[-] class f7vcsfb0 did not return')
                     if self.args.verbose:
-                        print(color_text("yellow", f"error details:\n{error}"))
+                        if not self.args.blackout:
+                            print(color_text("yellow", f"error details:\n{error}"))
+                        else:
+                            print(f"error details:\n{error}")
                 else:
                     if self.args.verbose:
-                        print(f'[{color_text("blue", "+")}] Collecting data from: div.f7vcsfb0')
+                        if not self.args.blackout:
+                            print(f'[{color_text("blue", "+")}] Collecting data from: div.f7vcsfb0')
+                        else:
+                            print('[+] collecting data from: div.f7vcsfb0')
                     else:
                         if self.args.quiet:
                             rest += 1
-                            print("\033[K", f'[{color_text("blue", "+")}] collecting data ({rest}:{tot})', end="\r")
+                            if not self.args.blackout:
+                                print("\033[K", f'[{color_text("blue", "+")}] collecting data ({rest}:{tot})', end="\r")
+                            else:
+                                print("\033[K", f'[+] collecting data ({rest}:{tot})', end="\r")
                         else:
-                            print(f'[{color_text("blue", "+")}] collecting data ...')
+                            if not self.args.blackout:
+                                print(f'[{color_text("blue", "+")}] collecting data ...')
+                            else:
+                                print('[+] collecting data...')
                     temp_data.append(output.text)
 
                     # check to start scrape family members
@@ -440,13 +530,19 @@ class Fisher(Manager):
                 for memb in self.get_affluent()[usrs]:
                     print()
                     if not self.args.quiet:
-                        print(f'[{color_text("white", "*")}] Coming in {memb}')
+                        if not self.args.blackout:
+                            print(f'[{color_text("white", "*")}] Coming in {memb}')
+                        else:
+                            print(f'[*] comming in {memb}')
                     temp_data.append(div)
 
                     # search for extra data
                     if self.args.several:
                         if self.args.verbose:
-                            print(f'[{color_text("blue", "+")}] getting extra data...')
+                            if not self.args.blackout:
+                                print(f'[{color_text("blue", "+")}] getting extra data...')
+                            else:
+                                print('[+] getting extra data...')
                         _extra_data(brw, memb)
 
                     rest = 0
@@ -457,22 +553,41 @@ class Fisher(Manager):
                                                                                 'f7vcsfb0')))
 
                         except exceptions.TimeoutException:
-                            print(f'[{color_text("yellow", "-")}] time limit exceeded')
+                            if not self.args.blackout:
+                                print(f'[{color_text("yellow", "-")}] time limit exceeded')
+                            else:
+                                print('[-] time limit exceeded')
 
                         except Exception as error:
-                            print(f'[{color_text("red", "-")}] class f7vcsfb0 did not return')
+                            if not self.args.blackout:
+                                print(f'[{color_text("red", "-")}] class f7vcsfb0 did not return')
+                            else:
+                                print('[-] class f7vcsfb0 did not return')
                             if self.args.verbose:
-                                print(color_text("yellow", f"error details:\n{error}"))
+                                if not self.args.blackout:
+                                    print(color_text("yellow", f"error details:\n{error}"))
+                                else:
+                                    print(f"error details:\n{error}")
                         else:
                             if self.args.verbose:
-                                print(f'[{color_text("blue", "+")}] Collecting data from: div.f7vcsfb0')
+                                if not self.args.blackout:
+                                    print(f'[{color_text("blue", "+")}] Collecting data from: div.f7vcsfb0')
+                                else:
+                                    print('[+] collecting data from: div.f7vcsfb0')
                             else:
                                 if self.args.quiet:
                                     rest += 1
-                                    print("\033[K", f'[{color_text("blue", "+")}] collecting data ({rest}:{tot})',
-                                        end="\r")
+                                    if not self.args.blackout:
+                                        print("\033[K",
+                                             f'[{color_text("blue", "+")}] collecting data ({rest}:{tot})',
+                                             end="\r")
+                                    else:
+                                        print("\033[K", f'[+] collecting data ({rest}:{tot})', end="\r")
                                 else:
-                                    print(f'[{color_text("blue", "+")}] collecting data ...')
+                                    if not self.args.blackout:
+                                        print(f'[{color_text("blue", "+")}] collecting data ...')
+                                    else:
+                                        print('[+] collecting data...')
                             temp_data.append(output2.text)
 
             # complete addition of all data
@@ -492,18 +607,30 @@ class Fisher(Manager):
             brw.get(url_base)
         except exceptions.WebDriverException as error:
             if self.args.verbose:
-                print(f'[{color_text("red", "-")}] An error occurred while loading the home page:')
-                print(error)
-                print(f'[{color_text("yellow", "*")}] clearing cookies and starting over.')
+                if not self.args.blackout:
+                    print(f'[{color_text("red", "-")}] An error occurred while loading the home page:')
+                    print(error)
+                    print(f'[{color_text("yellow", "*")}] clearing cookies and starting over.')
+                else:
+                    print('[-] An error occurred while loading the home page:')
+                    print(error)
+                    print('[*] clearing cookies and starting over')
             elif self.args.quiet:
-                print(f'[{color_text("yellow", "*")}] An error occurred, restarting.')
+                if not self.args.blackout:
+                    print(f'[{color_text("yellow", "*")}] An error occurred, restarting.')
+                else:
+                    print('[*] An error occurred, restarting')
 
             brw.delete_all_cookies()
             self.__login(brw)
         finally:
             if brw.current_url != url_base:
-                print(color_text("red", "Unfortunately, I could not load the facebook homepage to login."))
-                print(color_text("yellow", "Go to the repository and create a new issue reporting the problem."))
+                if not self.args.blackout:
+                    print(color_text("red", "Unfortunately, I could not load the facebook homepage to login."))
+                    print(color_text("yellow", "Go to the repository and create a new issue reporting the problem."))
+                else:
+                    print("Unfortunately, I could not load the facebook homepage to login.")
+                    print("Go to the repository and create a new issue reporting the problem.")
                 sys.exit(1)
 
         wbw = WebDriverWait(brw, 10)
@@ -521,12 +648,21 @@ class Fisher(Manager):
             ghost_pass = self.get_pass()
 
             if self.args.verbose:
-                print(f'[{color_text("white", "*")}] adding fake email: {ghost_email}')
+                if not self.args.blackout:
+                    print(f'[{color_text("white", "*")}] adding fake email: {ghost_email}')
+                else:
+                    print(f'[*] adding ghost email: {ghost_email}')
                 email.send_keys(ghost_email)
-                print(f'[{color_text("white", "*")}] adding password: ...')
+                if not self.args.blackout:
+                    print(f'[{color_text("white", "*")}] adding password: ...')
+                else:
+                    print('[*] adding password:...')
                 pwd.send_keys(b64decode(ghost_pass).decode("utf-8"))
             else:
-                print(f'[{color_text("white", "*")}] logging into the account: {ghost_email}')
+                if not self.args.blackout:
+                    print(f'[{color_text("white", "*")}] logging into the account: {ghost_email}')
+                else:
+                    print(f'[*] logging into the account: {ghost_email}')
                 email.send_keys(ghost_email)
                 pwd.send_keys(b64decode(ghost_pass).decode("utf-8"))
         else:
@@ -541,7 +677,10 @@ class Fisher(Manager):
                 pwd.send_keys(self.args.pwd)
         ok.click()
         if self.args.verbose:
-            print(f'[{color_text("green", "+")}] successfully logged in')
+            if not self.args.blackout:
+                print(f'[{color_text("green", "+")}] successfully logged in')
+            else:
+                print('[+] successfully logged in')
 
 
     def _boot(self):
@@ -568,18 +707,28 @@ class Fisher(Manager):
 
         if not self.args.browser:
             if self.args.verbose:
-                print(f'[{color_text("blue", "*")}] Starting in hidden mode')
+                if not self.args.blackout:
+                    print(f'[{color_text("blue", "*")}] Starting in hidden mode')
+                else:
+                    print('[*] starting in hidden mode')
             _options.headless = True
         _options.add_argument("--start-maximized")
 
         if self.args.verbose:
-            print(f'[{color_text("white", "*")}] Opening browser ...')
+            if not self.args:
+                print(f'[{color_text("white", "*")}] Opening browser ...')
+            else:
+                print('[*] opening browser...')
         try:
             engine = Firefox(options=_options)
         except Exception as error:
-            print(color_text("red",
-                            f'The executable "geckodriver" was not found or the browser "Firefox" is not installed.'))
-            print(color_text("yellow", f"error details:\n{error}"))
+            if not self.args.blackout:
+                print(color_text("red",
+                                f'The executable "geckodriver" was not found or the browser "Firefox" is not installed.'))
+                print(color_text("yellow", f"error details:\n{error}"))
+            else:
+                print('The executable "geckodriver" was not found or the browser "Firefox" is not installed.')
+                print(f"error details:\n{error}")
         else:
             return engine
 
@@ -599,4 +748,7 @@ class Fisher(Manager):
                 for data_list in self.get_data()[usr]:
                     file.writelines(data_list)
 
-        print(f'[{color_text("green", "+")}] .txt file(s) created')
+        if not self.args.blackout:
+            print(f'[{color_text("green", "+")}] .txt file(s) created')
+        else:
+            print('[+] .txt file(s) created')
