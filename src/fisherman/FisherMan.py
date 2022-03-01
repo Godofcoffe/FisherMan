@@ -191,6 +191,13 @@ class Fisher(Manager):
                 )
 
 
+    def entry(self, *args):
+        """
+            Load a file to replace the username parameter.
+        """
+        self.__upload_txt_file(*args)
+
+
     def __compact(self, _list: List[AnyStr]):
         """
             Compress all .txt with the exception of requirements.txt.
@@ -213,6 +220,13 @@ class Fisher(Manager):
             print(f'[{color_text("green", "+")}] successful compression')
         else:
             print('[+] successful compression')
+
+
+    def save_and_compact(self, *args):
+        """
+            Compress all .txt with the exception of requirements.txt.
+        """
+        self.__compact(*args)
 
 
     def check_connection(self):
@@ -684,6 +698,15 @@ class Fisher(Manager):
                 print('[+] successfully logged in')
 
 
+    def login_in(self, *args):
+        """
+            Login on the page.
+
+            :param brw: Instance of WebDriver.
+        """
+        self.__login(*args)
+
+
     def _boot(self):
         """
             Start the webdriver.
@@ -753,3 +776,10 @@ class Fisher(Manager):
             print(f'[{color_text("green", "+")}] .txt file(s) created')
         else:
             print('[+] .txt file(s) created')
+
+
+    def save(self, *args):
+        """
+            Create the .txt output of the -o parameter.
+        """
+        self.__out_file(*args)
