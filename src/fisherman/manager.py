@@ -25,7 +25,7 @@ class Manager:
     __id_url_prefix = "https://www.facebook.com/profile.php?id="
     __prefix_url_search = "https://www.facebook.com/search/people/?q="
     __ghost_email = 'opalabrillante@gmail.com'
-    __ghost_password = 'a2trMDMwMzA'
+    __ghost_password = 'a2trMDMwMzA='
     __data = {}
     __affluent = {}
     __extras = {}
@@ -142,7 +142,7 @@ class Manager:
 
             :return: default page.
         """
-        return cls.__url
+        return cls.__url_base
 
     @classmethod
     def get_id_prefix(cls):
