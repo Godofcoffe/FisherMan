@@ -116,28 +116,37 @@ class Fisher(Manager):
             as long as the words are separated by underscores.
         """
         file_name = func.__name__.split("_")
+        print(file_name)
         valid = []
+        wasteds = []
 
         for _, _, files in walk(getcwd()):
-            for file_ in files:
-                for F in file_name:
-                    if F in file_:
-                        try:
-                            r2 = requests.get(f"https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/{file_}")
-                            if r2.text != open(f"{file_}").read():
-                                if not self.args.blackout:
-                                    print(color_text("yellow", f"Changes in the {file_} file have been found."))
-                                else:
-                                    print(f"Changes in the {file_} file have been found.")
-                                __queue__.append(func)
-                                valid.append(True)
-                            else:
-                                valid.append(False)
-                        except Exception as error2:
-                            if not self.args.blackout:
-                                print(color_text("red", f"A problem occurred when checking the {file_} file.\n{error2}"))
-                            else:
-                                print(f"A problem occurred when checking the {file_} file.\n{error2}")
+            for _file in files:
+                for split in file_name:
+                    if split in _file and split:
+                        # wasteds.append(_file)
+                        print(_file)
+                        print(repr(split))
+                        continue
+
+        if wasteds:
+            for wasted in wasteds:
+                try:
+                    r2 = requests.get(f"https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/{wasted}")
+                    if r2.text != open(f"{wasted}").read():
+                        if not self.args.blackout:
+                            print(color_text("yellow", f"Changes in the {wasted} file have been found."))
+                        else:
+                            print(f"Changes in the {wasted} file have been found.")
+                            __queue__.append(func)
+                            valid.append(True)
+                    else:
+                        valid.append(False)
+                except Exception as error2:
+                    if not self.args.blackout:
+                        print(color_text("red", f"A problem occurred when checking the {wasted} file."))
+                    else:
+                        print(f"A problem occurred when checking the {wasted} file.")
         return valid
 
 
