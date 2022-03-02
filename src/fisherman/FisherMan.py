@@ -714,7 +714,10 @@ class Fisher(Manager):
 
             :param brw: Instance of WebDriver.
         """
-        self.__login(*args)
+        if not all(args):
+            sys.exit(1)
+        else:
+            self.__login(*args)
 
 
     def _boot(self):
