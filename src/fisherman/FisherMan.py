@@ -43,7 +43,7 @@ class Fisher(Manager):
         self.check_connection()
         if self.args.update:
             self.update()
-            control(filters=upgrade_filters)  # add more parameters as you add files to update.
+            self.__control(filters=self._upgrade_filters)  # add more parameters as you add files to update.
 
 
     def update(self):
@@ -77,6 +77,7 @@ class Fisher(Manager):
             else:
                 print(f"A problem occured while checking for an update: {error}")
 
+
     def __control(self, **kwargs):
         """
             Controls the flow of file updates.
@@ -86,7 +87,7 @@ class Fisher(Manager):
         """
         start = []
         for process in kwargs.values():
-            start.append(__sub_update(process))
+            start.append(self.__sub_update(process))
 
         for something_positive in start:
             if any(something_positive):
@@ -466,7 +467,7 @@ class Fisher(Manager):
         wbw = WebDriverWait(brw, 10)
 
         for usrs in items:
-            prefix, usrs = __thin_out(usrs)
+            prefix, usrs = self.__thin_out(usrs)
             temp_data = []
             if not self.args.quiet:
                 if not self.args.blackout:
@@ -570,7 +571,7 @@ class Fisher(Manager):
                         _extra_data(brw, memb)
 
                     rest = 0
-                    for bn in branch if not __thin_out(memb)[1].isnumeric() else branch_id:
+                    for bn in branch if not self.__thin_out(memb)[1].isnumeric() else branch_id:
                         brw.get(f'{memb + bn}')
                         try:
                             output2 = wbw.until(ec.presence_of_element_located((By.CLASS_NAME,
@@ -773,7 +774,7 @@ class Fisher(Manager):
             :param _input: The list that will be iterated over each line of the file, in this case it is the list of users.
         """
         for usr in _input:
-            usr = __thin_out(usr)[1]
+            usr = self.__thin_out(usr)[1]
             file_name = rf"{usr}-{str(datetime.now()):%d-%m-%yy-%h-%M}.txt"
             if self.args.compact:
                 file_name = usr + ".txt"
