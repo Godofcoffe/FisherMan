@@ -51,7 +51,7 @@ class Fisher(Manager):
             checks changes from the main script to the remote server..
         """
         try:
-            r = requests.get("https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/fisherman.py")
+            r = requests.get("https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/src/fisherman/FisherMan.py")
 
             remote_version = str(findall('__version__ = "(.*)"', r.text)[0])
             local_version = __version__
@@ -154,7 +154,7 @@ class Fisher(Manager):
         """
             Rewrite the filters.json file.
         """
-        r3 = requests.get("https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/filters.json")
+        r3 = requests.get("https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/src/fisherman/filters.json")
         if r3.status_code == requests.codes.OK:
             with open("filters.json", "w") as new_filters:
                 new_filters.write(r3.text)
