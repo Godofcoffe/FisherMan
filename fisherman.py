@@ -2,7 +2,7 @@
 
 from argparse import ArgumentParser
 
-from src.fisherman.FisherMan import Fisher, __version__, module_name
+from src.fisherman.FisherMan import Fisher, __version__, module_name, color_text
 
 
 
@@ -102,7 +102,11 @@ elif any((cli.id, cli.username, cli.search, cli.txt)):
                 little_fish._scrape(browser, cli.username)
             elif cli.id:
                 little_fish._scrape(browser, cli.id)
-            print(color_text('green', 'Information found:'))
+
+            if not cli.blackout:
+                print(color_text('green', 'Information found:'))
+            else:
+                print('Information found:')
             count_profiles = len(little_fish.get_all_keys()[2])
             for profile in little_fish.get_all_keys()[2]:
                 for data in little_fish.get_data()[profile]:
