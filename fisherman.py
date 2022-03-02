@@ -86,6 +86,8 @@ little_fish = Fisher(parser=cli)
 
 if cli.filters:
     little_fish.show_filters()
+elif cli.update:
+    pass
 elif any((cli.id, cli.username, cli.search, cli.txt)):
     browser = little_fish._boot()
     try:
@@ -97,7 +99,7 @@ elif any((cli.id, cli.username, cli.search, cli.txt)):
             little_fish._search(browser, cli.search)
         else:
             if cli.txt:
-                little_fish._scrape(browser, little_fish.entry(cli.txt[0]))
+                little_fish._scrape(browser, little_fish.entry(cli.txt))
             elif cli.username:
                 little_fish._scrape(browser, cli.username)
             elif cli.id:
@@ -123,7 +125,8 @@ elif any((cli.id, cli.username, cli.search, cli.txt)):
                     for data_extra in little_fish.get_extras()[profile].items():
                         print(f"{data_extra[0]:10}: {data_extra[1]}")
     finally:
-        browser.quit()
+        if browser is not None:
+            browser.quit()
 
     if cli.out:
         if cli.username:
