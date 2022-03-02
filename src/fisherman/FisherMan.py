@@ -136,18 +136,18 @@ class Fisher(Manager):
                     r2 = requests.get(f"https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/{wasted}")
                     if r2.text != open(f"{wasted}").read():
                         if not self.args.blackout:
-                            print(color_text("yellow", f"Changes in the {wasted} file have been found."))
+                            print(color_text("yellow", f"Changes in the {wasted} file have been found"))
                         else:
-                            print(f"Changes in the {wasted} file have been found.")
+                            print(f"Changes in the {wasted} file have been found")
                             __queue__.append(func)
                             valid.append(True)
                     else:
                         valid.append(False)
                 except Exception as error2:
                     if not self.args.blackout:
-                        print(color_text("red", f"A problem occurred when checking the {wasted} file."))
+                        print(color_text("red", f"A problem occurred when checking the {wasted} file"))
                     else:
-                        print(f"A problem occurred when checking the {wasted} file.")
+                        print(f"A problem occurred when checking the {wasted} file")
         return valid
 
 
@@ -246,7 +246,7 @@ class Fisher(Manager):
         try:
             requests.get("https://google.com")
         except requests.exceptions.ConnectionError:
-            raise Exception("There is no internet connection.")
+            raise Exception("There is no internet connection")
 
 
     def _search(self, brw: Firefox, user: AnyStr):
@@ -534,7 +534,7 @@ class Fisher(Manager):
                                 print("\033[K", f'[+] collecting data ({rest}:{tot})', end="\r")
                         else:
                             if not self.args.blackout:
-                                print(f'[{color_text("blue", "+")}] collecting data ...')
+                                print(f'[{color_text("blue", "+")}] collecting data...')
                             else:
                                 print('[+] collecting data...')
                     temp_data.append(output.text)
@@ -610,7 +610,7 @@ class Fisher(Manager):
                                         print("\033[K", f'[+] collecting data ({rest}:{tot})', end="\r")
                                 else:
                                     if not self.args.blackout:
-                                        print(f'[{color_text("blue", "+")}] collecting data ...')
+                                        print(f'[{color_text("blue", "+")}] collecting data...')
                                     else:
                                         print('[+] collecting data...')
                             temp_data.append(output2.text)
@@ -668,18 +668,19 @@ class Fisher(Manager):
         pwd.clear()
 
         # custom accounts will only be applied if both fields are not empty
-        if self.args.email is None or self.args.self.args.pwd is None:
+        if self.args.email is None or self.args.pwd is None:
             ghost_email = self.get_email()
             ghost_pass = self.get_pass()
 
             if self.args.verbose:
                 if not self.args.blackout:
-                    print(f'[{color_text("white", "*")}] adding fake email: {ghost_email}')
+                    print(f'[{color_text("white", "*")}] adding ghost email: {ghost_email}')
                 else:
                     print(f'[*] adding ghost email: {ghost_email}')
                 email.send_keys(ghost_email)
+
                 if not self.args.blackout:
-                    print(f'[{color_text("white", "*")}] adding password: ...')
+                    print(f'[{color_text("white", "*")}] adding password:...')
                 else:
                     print('[*] adding password:...')
                 pwd.send_keys(b64decode(ghost_pass).decode("utf-8"))
@@ -694,7 +695,7 @@ class Fisher(Manager):
             if self.args.verbose:
                 print(f'adding email: {self.args.email}')
                 email.send_keys(self.args.self.args.email)
-                print('adding password: ...')
+                print('adding password:...')
                 pwd.send_keys(self.args.pwd)
             else:
                 print(f'logging into the account: {self.args.email}')
@@ -753,7 +754,7 @@ class Fisher(Manager):
 
         if self.args.verbose:
             if not self.args:
-                print(f'[{color_text("white", "*")}] Opening browser ...')
+                print(f'[{color_text("white", "*")}] Opening browser...')
             else:
                 print('[*] opening browser...')
         try:
