@@ -2,7 +2,7 @@ import json
 import sys
 from base64 import b64decode
 from datetime import datetime
-from os import walk, remove, getcwd
+from os import walk, remove, getcwd, scandir
 from pathlib import Path
 from re import findall
 from time import sleep
@@ -25,7 +25,7 @@ from .manager import Manager, Xpaths
 
 module_name = 'FisherMan: Extract information from facebook profiles.'
 __version__ = "3.8"
-__queue__ = []
+__queue__ = [] # list of functions that have updated files
 
 
 class Fisher(Manager):
@@ -85,25 +85,24 @@ class Fisher(Manager):
             Use the key as an identifier for the function and this key will be displayed if the conditions are met,
             and use the function itself to rewrite the value.
         """
-        start = []
         for process in kwargs.values():
-            start.append(self.__sub_update(process))
+            start = self.__sub_update(process)
 
-        for something_positive in start:
-            if any(something_positive):
-                print("Updates are available:")
-                if __queue__:
-                    for func in __queue__:
-                        for key in kwargs.keys():
-                            if key in func.__name__:
-                                print(key)
-                    print()
-                    choose = input("Continue?[Y/N]: ").strip().lower()[0]
-                    if choose == "y":
-                        for obsolete in __queue__:
-                            obsolete()
-                else:
-                    print("nothing to update")
+        # checks if a file is "True", and searches for the related function to update.
+        if any(start):
+            print("Updates are available:")
+            if __queue__:
+                for func in __queue__:
+                    for key in kwargs.keys():
+                        if key in func.__name__:
+                            print(key)
+                print()
+                choose = input("Continue?[Y/N]: ").strip().lower()[0]
+                if choose == "y":
+                    for obsolete in __queue__:
+                        obsolete()
+        else:
+            print("Nothing to update")
 
 
     def __sub_update(self, func):
@@ -117,45 +116,67 @@ class Fisher(Manager):
             as long as the words are separated by underscores.
         """
         file_name = func.__name__.split("_")
-        print(file_name)
-        valid = []
+        valided = []
         wasteds = []
+        relevant_directories = ['.', './src/fisherman/']
 
-        for _, _, files in walk(getcwd()):
-            for _file in files:
+        for path in relevant_directories:
+            for arch in scandir(path):
                 for split in file_name:
-                    if split in _file and split:
-                        # wasteds.append(_file)
-                        print(_file)
-                        print(repr(split))
+                    if split in arch.name and split:
+                        wasteds.append(arch)
                         continue
 
         if wasteds:
             for wasted in wasteds:
                 try:
-                    r2 = requests.get(f"https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/{wasted}")
-                    if r2.text != open(f"{wasted}").read():
-                        if not self.args.blackout:
-                            print(color_text("yellow", f"Changes in the {wasted} file have been found"))
-                        else:
-                            print(f"Changes in the {wasted} file have been found")
-                            __queue__.append(func)
-                            valid.append(True)
-                    else:
-                        valid.append(False)
-                except Exception as error2:
+                    raw = open(f"{wasted.path}").read()
+                except FileNotFoundError:
                     if not self.args.blackout:
-                        print(color_text("red", f"A problem occurred when checking the {wasted} file"))
+                        print(color_text("yellow", f"File {wasted.name} not found"))
                     else:
-                        print(f"A problem occurred when checking the {wasted} file")
-        return valid
+                        print(f"File {wasted.name} not found")
+                    if self.args.verbose:
+                        print('Trying again...')
+                    try:
+                        raw = open(f"{wasted.path}").read()
+                    except:
+                        if not self.args.blackout:
+                            print(color_text('red',
+                                             'Maybe the file is not located in the expected path'))
+                        else:
+                            print('Maybe the file is not located in the expected path')
+                else:
+                    try:
+                        r2 = requests.get('https://raw.githubusercontent.com/'
+                                          f'Godofcoffe/FisherMan/main/src/fisherman/{wasted.name}')
+                    except:
+                        if not self.args.blackout:
+                            print(color_text('red', 'File not found in the repository'))
+                        else:
+                            print('File not found in the repository')
+                        r2 = requests.get('https://raw.githubusercontent.com/'
+                                          f'Godofcoffe/FisherMan/main/{wasted.name}')
+                    else:
+                        if r2.text != raw:
+                            if not self.args.blackout:
+                                print(color_text("yellow", f"Changes in the {wasted.name} file have been found"))
+                            else:
+                                print(f"Changes in the {wasted.name} file have been found")
+                                # Add the function that will change the file to a global update list
+                                __queue__.append(func)
+                                valided.append(True)
+                        else:
+                            valided.append(False)
+        return valided # returns the signal of the files ready to change.
 
 
     def _upgrade_filters(self):
         """
             Rewrite the filters.json file.
         """
-        r3 = requests.get("https://raw.githubusercontent.com/Godofcoffe/FisherMan/main/src/fisherman/filters.json")
+        r3 = requests.get("https://raw.githubusercontent.com/"
+                          "Godofcoffe/FisherMan/main/src/fisherman/filters.json")
         if r3.status_code == requests.codes.OK:
             with open("filters.json", "w") as new_filters:
                 new_filters.write(r3.text)
