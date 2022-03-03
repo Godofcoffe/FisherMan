@@ -87,7 +87,7 @@ little_fish = Fisher(parser=cli)
 if cli.filters:
     little_fish.show_filters()
 elif cli.update:
-    pass
+    little_fish.update()
 elif any((cli.id, cli.username, cli.search, cli.txt)):
     browser = little_fish._boot()
     try:
