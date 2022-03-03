@@ -41,9 +41,6 @@ class Fisher(Manager):
         if not self.args.blackout:
             colorama.init()
         self.check_connection()
-        if self.args.update:
-            self.update()
-            self.__control(filters=self._upgrade_filters)  # add more parameters as you add files to update.
 
 
     def update(self):
@@ -76,6 +73,8 @@ class Fisher(Manager):
                 print(color_text('red', f"A problem occured while checking for an update: {error}"))
             else:
                 print(f"A problem occured while checking for an update: {error}")
+
+        self.__control(filters=self._upgrade_filters) # add more parameters as you add files to update.
 
 
     def __control(self, **kwargs):
