@@ -278,7 +278,7 @@ class Fisher(Manager):
         """
         parameter = user.replace(".", "%20")
 
-        with open("filters.json") as jsonfile:
+        with open("./src/fisherman/filters.json") as jsonfile:
             filters = json.load(jsonfile)
 
         if self.args.work or self.args.education or self.args.city:
@@ -300,7 +300,7 @@ class Fisher(Manager):
             else:
                 print('[+] entering the search page')
         sleep(2)
-        profiles = __scrolling_by_element(browser, (By.CSS_SELECTOR, "[role='article']"))
+        profiles = self.__scrolling_by_element(brw, (By.CSS_SELECTOR, "[role='article']"))
         if self.args.verbose:
             if not self.args.blackout:
                 print(f'[{color_text("green", "+")}] loaded profiles: {color_text("green", len(profiles))}')
@@ -315,7 +315,7 @@ class Fisher(Manager):
         print()
         for profile in profiles:
             try:
-                title = profile.find_element_by_tag_name("h2")
+                title = profile.find_element(By.TAG_NAME, "h2")
             except (exceptions.StaleElementReferenceException, AttributeError, exceptions.NoSuchElementException):
                 pass
             else:
@@ -325,7 +325,7 @@ class Fisher(Manager):
                     print("Name: ", title.text)
 
             try:
-                info = profile.find_element_by_class_name("jktsbyx5").text
+                info = profile.find_element(By.CLASS_NAME, "jktsbyx5").text
             except (exceptions.NoSuchElementException, exceptions.StaleElementReferenceException):
                 pass
             else:
@@ -335,7 +335,7 @@ class Fisher(Manager):
                     print('Info: ', str(info).replace("\n", ", "))
 
             try:
-                link = str(title.find_element_by_css_selector("a[href]").get_attribute("href")).replace("\n", "")
+                link = str(title.find_element(By.CSS_SELECTOR, "a[href]").get_attribute("href")).replace("\n", "")
             except (AttributeError, UnboundLocalError):
                 pass
             else:
