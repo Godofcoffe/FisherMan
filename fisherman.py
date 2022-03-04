@@ -2,25 +2,7 @@
 
 from argparse import ArgumentParser
 
-<<<<<<< HEAD
 from src.fisherman.FisherMan import Fisher, __version__, module_name, color_text
-=======
-import colorama
-import requests
-import requests.exceptions
-from selenium.common import exceptions
-from selenium.webdriver import Firefox, FirefoxOptions, FirefoxProfile
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as ec
-from selenium.webdriver.support.ui import WebDriverWait
-
-from src.form_text import color_text
-from src.logo import name
-from src.manager import Manager, Xpaths
-
-module_name = 'FisherMan: Extract information from facebook profiles.'
-__version__ = "3.4.1"
->>>>>>> 12ea135 (update version)
 
 
 
