@@ -13,8 +13,8 @@ import colorama
 import requests
 import requests.exceptions
 from selenium.common import exceptions
-from selenium.webdriver import Firefox
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver import Chrome
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
@@ -757,12 +757,7 @@ class Fisher(Manager):
         # browser settings
         _options = Options()
 
-        # eliminate pop-ups
-        _options.set_preference("dom.popup_maximum", 0)
-        _options.set_preference("privacy.popups.showBrowserMessage", False)
-
         # incognito
-        _options.set_preference("browser.privatebrowsing.autostart", True)
         _options.add_argument("--incognito")
 
         # arguments
@@ -786,14 +781,14 @@ class Fisher(Manager):
             else:
                 print('[*] opening browser...')
         try:
-            engine = Firefox(options=_options)
+            engine = Chrome('../../bin/chromedriver.exe', options=_options)
         except Exception as error:
             if not self.args.blackout:
                 print(color_text("red",
-                                f'The executable "geckodriver" was not found or the browser "Firefox" is not installed.'))
+                                f'The executable "chromedriver" was not found or the browser "Chrome" is not installed.'))
                 print(color_text("yellow", f"error details:\n{error}"))
             else:
-                print('The executable "geckodriver" was not found or the browser "Firefox" is not installed.')
+                print('The executable "chromedriver" was not found or the browser "Chrome" is not installed')
                 print(f"error details:\n{error}")
         else:
             return engine
