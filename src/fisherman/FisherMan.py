@@ -407,7 +407,7 @@ class Fisher(Manager):
 
         try:
             element = collection_by_xpath(ec.visibility_of_element_located, xpaths.friends)
-            element = element.find_elements_by_tag_name("span")[2].text
+            element = element.find_elements(By.TAG_NAME, "span")[2].text
         except IndexError:
             if not self.args.blackout:
                 print(f'[{color_text("red", "-")}] There is no number of friends to catch')
