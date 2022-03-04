@@ -22,7 +22,7 @@ $ git switch compatible-with-windows
 $ git switch compatible-with-windows
 
 # install the requeriments
-$ python3 -m pip install -r requeriments.txt
+$ py -m pip install -r requeriments.txt
 
 # dependency:
  Download the chromedriver driver from this link:
