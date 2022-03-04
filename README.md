@@ -21,10 +21,9 @@ $ cd FisherMan
 $ python3 -m pip install -r requeriments.txt
 
 # dependency:
- you need to install geckodriver on your machine,
- download the binary from the official mozilla repo:
- https://github.com/mozilla/geckodriver/releases/latest
- extract and copy the binary, i recommend placing it in /usr/bin
+ Download the chromedriver driver from this link:
+ http://chromedriver.storage.googleapis.com/index.html
+ And paste the .exe into the **bin** folder inside the program.
 ```
 
 ## Docker
