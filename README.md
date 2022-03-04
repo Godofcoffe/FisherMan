@@ -102,7 +102,7 @@ output:
 
 To search for a user:
 
-* User name: `python3 fisherman.py -u name name.profile name.profile2`
+* User name: `python3 fisherman.py -u name.profile name.profile2`
 * ID: `python3 fisherman.py -i 000000000000`
 
 The username must be found on the facebook profile link, such as:
