@@ -177,7 +177,7 @@ class Fisher(Manager):
         r3 = requests.get("https://raw.githubusercontent.com/"
                           "Godofcoffe/FisherMan/main/src/fisherman/filters.json")
         if r3.status_code == requests.codes.OK:
-            with open("filters.json", "w") as new_filters:
+            with open("./src/fisherman/filters.json", "w") as new_filters:
                 new_filters.write(r3.text)
         else:
             r3.raise_for_status()
