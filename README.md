@@ -25,8 +25,8 @@ $ git switch compatible-with-windows
 $ py -m pip install -r requeriments.txt
 
 # dependency:
- Download the chromedriver driver from this link:
- http://chromedriver.storage.googleapis.com/index.html
+ Download the EdgeDriver(Stable channel) from this link:
+ https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/
  And paste the .exe into the **bin** folder inside the program.
 ```
 
