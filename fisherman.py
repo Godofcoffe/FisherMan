@@ -105,25 +105,28 @@ elif any((cli.id, cli.username, cli.search, cli.txt)):
             elif cli.id:
                 little_fish._scrape(browser, cli.id)
 
-            if not cli.blackout:
-                print(color_text('green', 'Information found:'))
-            else:
-                print('Information found:')
-            count_profiles = len(little_fish.get_all_keys()[2])
-            for profile in little_fish.get_all_keys()[2]:
-                for data in little_fish.get_data()[profile]:
-                    print('-' * 60)
-                    print(data)
-                if count_profiles > 1:
-                    print("\n\n")
-                    print("-" * 30, "{:^}".format("/" * 20), "-" * 28)
-                    print("\n\n")
+            if little_fish.get_data():
+                if not cli.blackout:
+                    print(color_text('green', 'Information found:'))
+                else:
+                    print('Information found:')
+                count_profiles = len(little_fish.get_all_keys()[2])
+                for profile in little_fish.get_all_keys()[2]:
+                    for data in little_fish.get_data()[profile]:
+                        print('-' * 60)
+                        print(data)
+                    if count_profiles > 1:
+                        print("\n\n")
+                        print("-" * 30, "{:^}".format("/" * 20), "-" * 28)
+                        print("\n\n")
 
-                if cli.several:
-                    print("=" * 60)
-                    print("EXTRAS:")
-                    for data_extra in little_fish.get_extras()[profile].items():
-                        print(f"{data_extra[0]:10}: {data_extra[1]}")
+                    if cli.several:
+                        print("=" * 60)
+                        print("EXTRAS:")
+                        for data_extra in little_fish.get_extras()[profile].items():
+                            print(f"{data_extra[0]:10}: {data_extra[1]}")
+            else:
+                print("Forgive me, I couldn't find anything.")
     finally:
         if browser is not None:
             browser.quit()
