@@ -2,7 +2,7 @@ import json
 import sys
 from base64 import b64decode
 from datetime import datetime
-from os import walk, remove, getcwd, scandir
+from os import remove, getcwd, scandir
 from pathlib import Path
 from re import findall
 from time import sleep
@@ -43,7 +43,7 @@ class Fisher(Manager):
         self.check_connection()
 
 
-    def update(self):
+    def update(self) -> None:
         """
             checks changes from the main script to the remote server..
         """
@@ -77,7 +77,7 @@ class Fisher(Manager):
         self.__control(filters=self._upgrade_filters) # add more parameters as you add files to update.
 
 
-    def __control(self, **kwargs):
+    def __control(self, **kwargs) -> None:
         """
             Controls the flow of file updates.
 
@@ -104,7 +104,7 @@ class Fisher(Manager):
             print("Nothing to update")
 
 
-    def __sub_update(self, func):
+    def __sub_update(self, func) -> List[bool]:
         """
             Differentiates the contents of the local file with the remote file.
 
@@ -170,7 +170,7 @@ class Fisher(Manager):
         return valided # returns the signal of the files ready to change.
 
 
-    def _upgrade_filters(self):
+    def _upgrade_filters(self) -> None:
         """
             Rewrite the filters.json file.
         """
@@ -183,7 +183,7 @@ class Fisher(Manager):
             r3.raise_for_status()
 
 
-    def show_filters(self):
+    def show_filters(self) -> None:
         """
             Shows the available filters.
         """
@@ -194,7 +194,7 @@ class Fisher(Manager):
                     print("\t", t)
 
 
-    def __upload_txt_file(self, name_file: AnyStr):
+    def __upload_txt_file(self, name_file: AnyStr) -> List[str]:
         """
             Load a file to replace the username parameter.
 
@@ -228,7 +228,7 @@ class Fisher(Manager):
         self.__upload_txt_file(*args)
 
 
-    def __compact(self, _list: List[AnyStr]):
+    def __compact(self, _list: List[AnyStr]) -> None:
         """
             Compress all .txt with the exception of requirements.txt.
         """
@@ -259,7 +259,7 @@ class Fisher(Manager):
         self.__compact(*args)
 
 
-    def check_connection(self):
+    def check_connection(self) -> None:
         """
             Check the internet connection.
         """
@@ -269,7 +269,7 @@ class Fisher(Manager):
             raise Exception("There is no internet connection")
 
 
-    def _search(self, brw: Firefox, user: AnyStr):
+    def _search(self, brw: Firefox, user: AnyStr) -> None:
         """
             It searches by the person's name.
 
@@ -346,7 +346,15 @@ class Fisher(Manager):
             print()
 
 
-    def _extra_data(self, brw: Firefox, user: AnyStr):
+    # As much as extra_data and scrape() do not return, 
+    # the generated data is saved in the global Manager class as a dictionary.
+
+
+    # Use Manager.get_data(), to return all dictionaries, 
+    # or get.all_...() for a tuple with specific information.
+
+
+    def _extra_data(self, brw: Firefox, user: AnyStr) -> None:
         """
             Save other data outside the about user page.
 
@@ -419,7 +427,7 @@ class Fisher(Manager):
             friends = element
 
         if self.args.txt:
-            _file_name = rf"extraData-{user}-{str(datetime.now()):%d-%m-%yy-%h-%M}.txt"
+            _file_name = f"extraData-{user}-{str(datetime.now()):%d-%m-%yy-%h-%M}.txt"
             if self.args.compact:
                 _file_name = f"extraData-{user}.txt"
             with open(_file_name, "w+") as extra:
@@ -431,7 +439,7 @@ class Fisher(Manager):
             self.add_extras(user, {"Bio": bio, "Followers": followers, "Friends": friends})
 
 
-    def __scrolling_by_element(self, brw: Firefox, locator: Tuple, n=30):
+    def __scrolling_by_element(self, brw: Firefox, locator: Tuple, n=30) -> List:
         """
             Scroll page by the number of elements.
 
@@ -452,7 +460,7 @@ class Fisher(Manager):
         return elements
 
 
-    def __thin_out(self, user: AnyStr):
+    def __thin_out(self, user: AnyStr) -> AnyStr:
         """
             Username Refiner.
 
@@ -471,7 +479,7 @@ class Fisher(Manager):
             return self.get_url(), user
 
 
-    def _scrape(self, brw: Firefox, items: List[AnyStr]):
+    def _scrape(self, brw: Firefox, items: List[AnyStr]) -> None:
         """
             Extract certain information from the html of an item in the list provided.
 
@@ -639,7 +647,7 @@ class Fisher(Manager):
             self.add_data(usrs, temp_data)
 
 
-    def __login(self, brw: Firefox):
+    def __login(self, brw: Firefox) -> None:
         """
             Execute the login on the page.
 
@@ -729,7 +737,7 @@ class Fisher(Manager):
                 print('[+] successfully logged in')
 
 
-    def login_in(self, *args):
+    def login_in(self, *args) -> None:
         """
             Login on the page.
 
@@ -741,7 +749,7 @@ class Fisher(Manager):
             self.__login(*args)
 
 
-    def _boot(self):
+    def _boot(self) -> Firefox:
         """
             Start the webdriver.
         """
@@ -791,7 +799,7 @@ class Fisher(Manager):
             return engine
 
 
-    def __out_file(self, _input: List[AnyStr]):
+    def __out_file(self, _input: List[AnyStr]) -> None:
         """
             Create the .txt output of the -o parameter.
 
@@ -799,7 +807,7 @@ class Fisher(Manager):
         """
         for usr in _input:
             usr = self.__thin_out(usr)[1]
-            file_name = rf"{usr}-{str(datetime.now()):%d-%m-%yy-%h-%M}.txt"
+            file_name = f"{usr}-{str(datetime.now()):%d-%m-%yy-%h-%M}.txt"
             if self.args.compact:
                 file_name = usr + ".txt"
             with open(file_name, 'w+') as file:
@@ -812,7 +820,7 @@ class Fisher(Manager):
             print('[+] .txt file(s) created')
 
 
-    def save(self, *args):
+    def save(self, *args) -> None:
         """
             Create the .txt output of the -o parameter.
         """
