@@ -13,7 +13,7 @@ import colorama
 import requests
 import requests.exceptions
 from selenium.common import exceptions
-from selenium.webdriver import Chrome
+from selenium.webdriver import Edge
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
@@ -781,14 +781,14 @@ class Fisher(Manager):
             else:
                 print('[*] opening browser...')
         try:
-            engine = Chrome('../../bin/chromedriver.exe', options=_options)
+            engine = Edge('../../bin/msedgedriver.exe', options=_options)
         except Exception as error:
             if not self.args.blackout:
                 print(color_text("red",
-                                f'The executable "chromedriver" was not found or the browser "Chrome" is not installed.'))
+                                f'The executable "msedgedriver" was not found or the browser "Edge" is not installed.'))
                 print(color_text("yellow", f"error details:\n{error}"))
             else:
-                print('The executable "chromedriver" was not found or the browser "Chrome" is not installed')
+                print('The executable "msedgedriver" was not found or the browser "Edge" is not installed')
                 print(f"error details:\n{error}")
         else:
             return engine
