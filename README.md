@@ -46,17 +46,10 @@ docker run --rm -it fisherman --help
 ## Usage
 
 ```console
-<<<<<<< HEAD
-$ python3 fisherman.py --help
-usage: fisherman.py [-h] [--version] [-u [USERNAME ...] | -i [ID ...] |
-                    --use-txt TXT_FILE | -S USER] [--update] [--blackout]
-                    [-v | -q] [-sf] [--specify [{0,1,2,3,4,5} ...]] [-s]
-=======
 $ py fisherman.py --help
 usage: fisherman.py [-h] [--version] [-u USERNAME [USERNAME ...] | -i ID
                     [ID ...] | --use-txt TXT_FILE | -S USER] [-v | -q] [-sf]
                     [--specify {0,1,2,3,4,5} [{0,1,2,3,4,5} ...]] [-s]
->>>>>>> fa660f0 (Update README.md)
                     [--filters]
                     [-work WORK | -education EDUCATION | -city CITY] [-b]
                     [--email EMAIL] [--password PASSWORD] [-o | -c]
