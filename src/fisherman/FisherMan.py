@@ -14,7 +14,7 @@ import requests
 import requests.exceptions
 from selenium.common import exceptions
 from selenium.webdriver import Edge
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.edge.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
