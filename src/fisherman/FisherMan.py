@@ -187,7 +187,7 @@ class Fisher(Manager):
         """
             Shows the available filters.
         """
-        with open("filters.json") as json_file:
+        with open("./src/fisherman/filters.json") as json_file:
             for tag in json.load(json_file).items():
                 print(f"{tag[0]}:")
                 for t in tag[1]:
