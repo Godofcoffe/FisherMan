@@ -781,7 +781,7 @@ class Fisher(Manager):
             else:
                 print('[*] opening browser...')
         try:
-            engine = Edge('../../bin/msedgedriver.exe', options=_options)
+            engine = Edge('./bin/msedgedriver.exe', options=_options)
         except Exception as error:
             if not self.args.blackout:
                 print(color_text("red",
