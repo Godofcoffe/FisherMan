@@ -21,6 +21,7 @@ $ git switch compatible-with-windows
 # change the branch
 $ git switch compatible-with-windows
 
+<<<<<<< HEAD
 # install the requeriments
 $ py -m pip install -r requeriments.txt
 
@@ -28,6 +29,13 @@ $ py -m pip install -r requeriments.txt
  Download the EdgeDriver(Stable channel) from this link:
  https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/
  And paste the .exe into the **bin** folder inside the program.
+=======
+# change the branch
+$ git switch compatible-with-windows
+
+# install the requeriments
+$ py -m pip install -r requeriments.txt
+>>>>>>> 30892b1f7286563801c60529ac3e4df99be833fa
 ```
 
 ## Docker
