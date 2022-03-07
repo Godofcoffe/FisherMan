@@ -110,7 +110,7 @@ class Manager:
         cls.__extras = dictionary
 
     @classmethod
-    def add_data(cls, key: AnyStr, item: Union[AnyStr, Number, Iterable, ...]) -> None:
+    def add_data(cls, key: AnyStr, item: Union[AnyStr, Number, Iterable]) -> None:
         """
             Add a data in __date__ with an identifying key.
 
@@ -120,7 +120,7 @@ class Manager:
         cls.__data[key] = item
 
     @classmethod
-    def add_affluent(cls, key, item: Union[AnyStr, Number, Iterable, ...]) -> None:
+    def add_affluent(cls, key, item: Union[AnyStr, Number, Iterable]) -> None:
         """
             Add a data in __affluent with an identifying key.
 
@@ -130,7 +130,7 @@ class Manager:
         cls.__affluent[key] = item
 
     @classmethod
-    def add_extras(cls, key, item: Union[AnyStr, Number, Iterable, ...]) -> None:
+    def add_extras(cls, key, item: Union[AnyStr, Number, Iterable]) -> None:
         """
             Add a data in __extras with an identifying key.
 
@@ -185,7 +185,7 @@ class Manager:
         return cls.__ghost_password
 
     @classmethod
-    def get_data(cls) -> Dict[Dict]:
+    def get_data(cls) -> Dict:
         """
             Returns all dicts.
 
