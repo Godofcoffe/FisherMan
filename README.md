@@ -105,7 +105,7 @@ output:
 
 To search for a user:
 
-* User name: `py fisherman.py -u name name.profile name.profile2`
+* User name: `py fisherman.py -u name.profile name.profile2`
 * ID: `py fisherman.py -i 000000000000`
 
 The username must be found on the facebook profile link, such as:
@@ -140,6 +140,15 @@ py fisherman.py --email youremail@email.com --password yourpass
     * Basic data: `py fisherman.py -u name --specify 0`
     * Family and relationship: `py -u name --specify 2`
     * It is still possible to mix: `py fisherman.py -u name --specify 0 2`
+    * Association of the pages:
+    ```
+    about: 0
+    about_contact_and_basic_info: 1
+    about_family_and_relationships: 2
+    about_details: 3
+    about_work_and_education: 4
+    about_places: 5
+    ```
 
 
 * To get additional things like profile picture, how many followers and how many friends:
@@ -149,7 +158,7 @@ py fisherman.py --email youremail@email.com --password yourpass
   
 * For a short search by people's name:
   ```
-  py fisherman.py [-S | --search] foo
+  py fisherman.py [-S | --search] The.fisherman
   ```
   Replace the spaces in the name with "."(periods).
   The script returns around 30 profiles.
