@@ -238,7 +238,7 @@ class Fisher(Manager):
                 print(f'[{color_text("white", "*")}] preparing compaction...')
             else:
                 print('[*] preparing compaction...')
-        with ZipFile(f"{str(datetime.now()):%d-%m-%yy-%h-%M}.zip", "w", ZIP_DEFLATED) as zip_output:
+        with ZipFile(f"{datetime.now():%d-%m-%Y-%H-%M}.zip", "w", ZIP_DEFLATED) as zip_output:
             for _, _, files in walk(getcwd()):
                 for archive in files:
                     extension = Path(archive).suffix
@@ -807,7 +807,7 @@ class Fisher(Manager):
         """
         for usr in _input:
             usr = self.__thin_out(usr)[1]
-            file_name = f"{usr}-{str(datetime.now()):%d-%m-%yy-%h-%M}.txt"
+            file_name = f"{usr}:{datetime.now():%d-%m-%Y-%H-%M}.txt"
             if self.args.compact:
                 file_name = usr + ".txt"
             with open(file_name, 'w+') as file:

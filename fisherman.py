@@ -105,7 +105,7 @@ elif any((cli.id, cli.username, cli.search, cli.txt)):
             elif cli.id:
                 little_fish._scrape(browser, cli.id)
 
-            if little_fish.get_data():
+            if little_fish.get_data() and (not cli.out and not cli.compact):
                 if not cli.blackout:
                     print(color_text('green', 'Information found:'))
                 else:
@@ -125,27 +125,27 @@ elif any((cli.id, cli.username, cli.search, cli.txt)):
                         print("EXTRAS:")
                         for data_extra in little_fish.get_extras()[profile].items():
                             print(f"{data_extra[0]:10}: {data_extra[1]}")
+            elif little_fish.get_data() and (cli.out or cli.compact):
+                if cli.out:
+                    if cli.username:
+                        little_fish.save(cli.username)
+                    elif cli.txt:
+                        little_fish.save(little_fish.entry(cli.txt))
+                    elif cli.id:
+                        little_fish.save(cli.id)
+
+                elif cli.compact:
+                    if cli.username:
+                        little_fish.save_and_compact(cli.username)
+                    elif cli.txt:
+                        little_fish.save_and_compact(little_fish.entry(cli.txt))
+                    elif cli.id:
+                        little_fish.save_and_compact(cli.id)
             else:
                 print("Forgive me, I couldn't find anything.")
     finally:
         if browser is not None:
             browser.quit()
-
-    if cli.out:
-        if cli.username:
-            little_fish.save(cli.username)
-        elif cli.txt:
-            little_fish.save(little_fish.entry(cli.txt))
-        elif cli.id:
-            little_fish.save(cli.id)
-
-    elif cli.compact:
-        if cli.username:
-            little_fish.save_and_compact(cli.username)
-        elif cli.txt:
-            little_fish.save_and_compact(little_fish.entry(cli.txt))
-        elif cli.id:
-            little_fish.save_and_compact(cli.id)
 else:
     print(f"No input argument was used.")
     print(f"Use an optional argument to run the script.")
