@@ -28,8 +28,8 @@ class Manager:
     __url_base = 'https://www.facebook.com/'
     __id_url_prefix = "https://www.facebook.com/profile.php?id="
     __prefix_url_search = "https://www.facebook.com/search/people/?q="
-    __ghost_email = 'opalabrillante@gmail.com'
-    __ghost_password = 'a2trMDMwMzA='
+    __ghost_email = 'gmarquizn@gmail.com'
+    __ghost_password = 'dGlqb2xpbjAw'
     __data = {}
     __affluent = {}
     __extras = {}
