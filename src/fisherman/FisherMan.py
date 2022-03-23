@@ -24,7 +24,7 @@ from .scripts.logo import name
 from .manager import Manager, Xpaths
 
 module_name = 'FisherMan: Extract information from facebook profiles.'
-__version__ = "3.8"
+__version__ = "3.8.1"
 __queue__ = [] # list of functions that have updated files
 
 
