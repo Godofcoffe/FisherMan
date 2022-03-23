@@ -28,6 +28,17 @@ __version__ = "3.8"
 __queue__ = [] # list of functions that have updated files
 
 
+def generic_exception(func: Callable) -> Callable:
+
+    def exception(*args, **kwargs):
+        try:
+            func(*args, **kwargs)
+        except Exception as error:
+            raise Exception(f"Something wrong happened here:\n{error}\n"
+                            "Report in:https://github.com/Godofcoffe/FisherMan/issues")
+    return exception
+
+
 class Fisher(Manager):
     def __init__(self, parser):
         self.args = parser
