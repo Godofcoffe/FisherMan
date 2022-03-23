@@ -205,13 +205,9 @@ class Fisher(Manager):
                     print("\t", t)
 
 
-    def __upload_txt_file(self, name_file: AnyStr) -> List[str]:
+    def __upload_txt_file(self, name_file) -> List[str]:
         """
             Load a file to replace the username parameter.
-
-            :param name_file: txt file name.
-
-            :return: A list with each line of the file.
         """
         if not name_file.endswith(".txt"):
             name_file += ".txt"
@@ -232,16 +228,21 @@ class Fisher(Manager):
                 )
 
 
-    def entry(self, *args):
+    @generic_exception
+    def entry(self, name_file: str) -> List[str]:
         """
             Load a file to replace the username parameter.
+
+            :param name_file: txt file name.
+
+            :return: A list with each line of the file.
         """
-        self.__upload_txt_file(*args)
+        self.__upload_txt_file(name_file)
 
 
-    def __compact(self, _list: List[AnyStr]) -> None:
+    def __compact(self, _list) -> None:
         """
-            Compress all .txt with the exception of requirements.txt.
+            Create a zip of all the program's outputs.
         """
         __out_file(_list)
         if self.args.verbose:
@@ -263,11 +264,15 @@ class Fisher(Manager):
             print('[+] successful compression')
 
 
-    def save_and_compact(self, *args):
+    @generic_exception
+    def save_and_compact(self, _list: List[str]) -> None:
         """
-            Compress all .txt with the exception of requirements.txt.
+            Create a zip of all the program's outputs.
+
+            :param _input: The list that will be iterated over each line of the file, in this case it is the list of users.
         """
-        self.__compact(*args)
+        self.__compact(_list)
+
 
 
     def check_connection(self) -> None:
@@ -661,8 +666,6 @@ class Fisher(Manager):
     def __login(self, brw: Firefox) -> None:
         """
             Execute the login on the page.
-
-            :param brw: Instance of WebDriver.
         """
         url_base = self.get_url()
 
@@ -748,7 +751,8 @@ class Fisher(Manager):
                 print('[+] successfully logged in')
 
 
-    def login_in(self, *args) -> None:
+    @generic_exception
+    def login_in(self, browser: Firefox) -> None:
         """
             Login on the page.
 
@@ -757,7 +761,7 @@ class Fisher(Manager):
         if not all(args):
             sys.exit(1)
         else:
-            self.__login(*args)
+            self.__login(browser)
 
 
     def _boot(self) -> Firefox:
@@ -810,11 +814,9 @@ class Fisher(Manager):
             return engine
 
 
-    def __out_file(self, _input: List[AnyStr]) -> None:
+    def __out_file(self, _input) -> None:
         """
             Create the .txt output of the -o parameter.
-
-            :param _input: The list that will be iterated over each line of the file, in this case it is the list of users.
         """
         for usr in _input:
             usr = self.__thin_out(usr)[1]
@@ -831,8 +833,11 @@ class Fisher(Manager):
             print('[+] .txt file(s) created')
 
 
-    def save(self, *args) -> None:
+    @generic_exception
+    def save(self, _input: List[str]) -> None:
         """
             Create the .txt output of the -o parameter.
+
+            :param _input: The list that will be iterated over each line of the file, in this case it is the list of users.
         """
-        self.__out_file(*args)
+        self.__out_file(_input)
