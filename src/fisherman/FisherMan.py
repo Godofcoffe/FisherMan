@@ -88,6 +88,7 @@ class Fisher(Manager):
         self.__control(filters=self._upgrade_filters) # add more parameters as you add files to update.
 
 
+    @generic_exception
     def __control(self, **kwargs) -> None:
         """
             Controls the flow of file updates.
@@ -194,6 +195,7 @@ class Fisher(Manager):
             r3.raise_for_status()
 
 
+    @generic_exception
     def show_filters(self) -> None:
         """
             Shows the available filters.
@@ -285,6 +287,7 @@ class Fisher(Manager):
             raise ConnectionError("There is no internet connection")
 
 
+    @generic_exception
     def _search(self, brw: Firefox, user: AnyStr) -> None:
         """
             It searches by the person's name.
@@ -495,6 +498,7 @@ class Fisher(Manager):
             return self.get_url(), user
 
 
+    @generic_exception
     def _scrape(self, brw: Firefox, items: List[AnyStr]) -> None:
         """
             Extract certain information from the html of an item in the list provided.
@@ -764,6 +768,7 @@ class Fisher(Manager):
             self.__login(browser)
 
 
+    @generic_exception
     def _boot(self) -> Firefox:
         """
             Start the webdriver.
