@@ -202,7 +202,7 @@ class Fisher(Manager):
 
             :return: A list with each line of the file.
         """
-        if not name_file.endswith(".txt").lower():
+        if not name_file.endswith(".txt"):
             name_file += ".txt"
         if Path(name_file).is_file():
             try:
