@@ -216,7 +216,7 @@ class Fisher(Manager):
             else:
                 return users_txt
         else:
-            raise Exception(
+            raise FileExistsError(
                     color_text("red", "INVALID FILE!") if not self.args.blackout else print("INVALID FILE!")
                 )
 
@@ -266,7 +266,7 @@ class Fisher(Manager):
         try:
             requests.get("https://google.com")
         except requests.exceptions.ConnectionError:
-            raise Exception("There is no internet connection")
+            raise ConnectionError("There is no internet connection")
 
 
     def _search(self, brw: Firefox, user: AnyStr) -> None:
