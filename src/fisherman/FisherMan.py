@@ -24,7 +24,7 @@ from .scripts.logo import name
 from .manager import Manager, Xpaths
 
 module_name = 'FisherMan: Extract information from facebook profiles.'
-__version__ = "3.8"
+__version__ = "3.8.1"
 __queue__ = [] # list of functions that have updated files
 
 
@@ -749,22 +749,19 @@ class Fisher(Manager):
             self.__login(*args)
 
 
-    def _boot(self) -> Firefox:
+    def _boot(self) -> Edge:
         """
             Start the webdriver.
         """
 
         # browser settings
         _options = Options()
-
-        # incognito
-        _options.add_argument("--incognito")
-
-        # arguments
-        # _options.add_argument('--disable-blink-features=AutomationControlled')
-        _options.add_argument("--disable-extensions")
-        # _options.add_argument('--profile-directory=Default')
-        _options.add_argument("--disable-plugins-discovery")
+        _options.set_capability("args", [
+            "--incognito",
+            "--disable-extensions",
+            "--disable-plugins-discovery",
+            "--start-maximized"
+        ])
 
         if not self.args.browser:
             if self.args.verbose:
@@ -773,7 +770,6 @@ class Fisher(Manager):
                 else:
                     print('[*] starting in hidden mode')
             _options.headless = True
-        _options.add_argument("--start-maximized")
 
         if self.args.verbose:
             if not self.args:
