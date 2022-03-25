@@ -771,9 +771,9 @@ class Fisher(Manager):
 
     def __who_is():
         if "win" in sys.platform:
-            return (Edge(), EdgeOptions(), "./bin/msedgedriver.exe")
+            return (Edge, EdgeOptions(), "./bin/msedgedriver.exe")
         else:
-            return (Firefox(), FirefoxOptions(), "./bin/geckodriver")
+            return (Firefox, FirefoxOptions(), "./bin/geckodriver")
 
 
     @generic_exception
@@ -826,7 +826,7 @@ class Fisher(Manager):
             else:
                 print('[*] opening browser...')
         try:
-            engine = driver(_path, options=_options)
+            engine = driver(executable_path=_path, options=_options)
         except Exception as error:
             message = 'The executable "geckodriver/msedgedriver.exe" '
             'was not found or the browser "Firefox" is not installed.'
