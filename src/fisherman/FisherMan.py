@@ -780,6 +780,15 @@ class Fisher(Manager):
         # eliminate pop-ups
         _options.set_preference("dom.popup_maximum", 0)
         _options.set_preference("privacy.popups.showBrowserMessage", False)
+        if isinstance(driver, Edge):
+            _options.set_capability(
+                "args", [
+                    "--incognito",
+                    "--disable-extensions",
+                    "--disable-plugins-discovery",
+                    "--start-maximized"
+                    ]
+                )
 
         # incognito
         _options.set_preference("browser.privatebrowsing.autostart", True)
