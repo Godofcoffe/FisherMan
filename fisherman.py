@@ -83,6 +83,8 @@ exclusive_out.add_argument("-c", "--compact", action="store_true",
 cli = parser.parse_args()
 
 little_fish = Fisher(parser=cli)
+warn = "WARNING: this version is deprecated, see: https://github.com/Godofcoffe/FisherMan#readme for more details."
+print(color_text("yellow", warn))
 
 if cli.filters:
     little_fish.show_filters()
