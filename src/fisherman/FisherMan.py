@@ -13,8 +13,9 @@ import colorama
 import requests
 import requests.exceptions
 from selenium.common import exceptions
-from selenium.webdriver import Firefox
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver import Firefox, Edge
+from selenium.webdriver.edge.options import Options as EdgeOptions
+from selenium.webdriver.firefox.options import FirefoxOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
@@ -768,18 +769,21 @@ class Fisher(Manager):
             self.__login(browser)
 
 
+    def __who_is():
+        if "win" in sys.platform:
+            return (Edge(), EdgeOptions(), "./bin/msedgedriver.exe")
+        else:
+            return (Firefox(), FirefoxOptions(), "./bin/geckodriver")
+
+
     @generic_exception
-    def _boot(self) -> Firefox:
+    def _boot(self) -> Firefox | Edge:
         """
             Start the webdriver.
         """
 
-        # browser settings
-        _options = Options()
+        driver, _options, _path = self.__who_is()
 
-        # eliminate pop-ups
-        _options.set_preference("dom.popup_maximum", 0)
-        _options.set_preference("privacy.popups.showBrowserMessage", False)
         if isinstance(driver, Edge):
             _options.set_capability(
                 "args", [
@@ -789,16 +793,23 @@ class Fisher(Manager):
                     "--start-maximized"
                     ]
                 )
+        else:
+            _options.add_argument("--start-maximized")
 
-        # incognito
-        _options.set_preference("browser.privatebrowsing.autostart", True)
-        _options.add_argument("--incognito")
+            # eliminate pop-ups
+            _options.set_preference("dom.popup_maximum", 0)
+            _options.set_preference("privacy.popups.showBrowserMessage", False)
 
-        # arguments
-        # _options.add_argument('--disable-blink-features=AutomationControlled')
-        _options.add_argument("--disable-extensions")
-        # _options.add_argument('--profile-directory=Default')
-        _options.add_argument("--disable-plugins-discovery")
+            # incognito
+            _options.set_preference("browser.privatebrowsing.autostart", True)
+            _options.add_argument("--incognito")
+
+            # arguments
+            # _options.add_argument('--disable-blink-features=AutomationControlled')
+            _options.add_argument("--disable-extensions")
+            # _options.add_argument('--profile-directory=Default')
+            _options.add_argument("--disable-plugins-discovery")
+
 
         if not self.args.browser:
             if self.args.verbose:
@@ -807,7 +818,7 @@ class Fisher(Manager):
                 else:
                     print('[*] starting in hidden mode')
             _options.headless = True
-        _options.add_argument("--start-maximized")
+
 
         if self.args.verbose:
             if not self.args:
@@ -815,14 +826,15 @@ class Fisher(Manager):
             else:
                 print('[*] opening browser...')
         try:
-            engine = Firefox(options=_options)
+            engine = driver(_path, options=_options)
         except Exception as error:
+            message = 'The executable "geckodriver/msedgedriver.exe" '
+            'was not found or the browser "Firefox" is not installed.'
             if not self.args.blackout:
-                print(color_text("red",
-                                f'The executable "geckodriver" was not found or the browser "Firefox" is not installed.'))
+                print(color_text("red", message))
                 print(color_text("yellow", f"error details:\n{error}"))
             else:
-                print('The executable "geckodriver" was not found or the browser "Firefox" is not installed.')
+                print(message)
                 print(f"error details:\n{error}")
         else:
             return engine
