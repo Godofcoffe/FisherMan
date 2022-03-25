@@ -1,7 +1,7 @@
 # FisherMan
 
 [![GitHub license](https://img.shields.io/github/license/Godofcoffe/FisherMan)](https://github.com/Godofcoffe/FisherMan/blob/main/LICENSE)
-![badge](https://img.shields.io/badge/version-3.8-blue)
+![badge](https://img.shields.io/badge/version-3.8.1-blue)
 ![badge](https://img.shields.io/badge/python-%3E%3D3.8-orange)
 
 ### Search for public profile information on Facebook
@@ -9,7 +9,7 @@
 ![demo-gif](demo-fisherman.gif)
 
 ## Installation
-
+**Warning: The Windows compatibility script has been merged with the pricipal.**
 ```console
 # clone the repo
 $ git clone https://github.com/Godofcoffe/FisherMan
@@ -18,13 +18,16 @@ $ git clone https://github.com/Godofcoffe/FisherMan
 $ cd FisherMan
 
 # install the requeriments
-$ python3 -m pip install -r requeriments.txt
+$ (python3 or py) -m pip install -r requeriments.txt
 
 # dependency:
- you need to install geckodriver on your machine,
- download the binary from the official mozilla repo:
- https://github.com/mozilla/geckodriver/releases/latest
- extract and copy the binary, i recommend placing it in /usr/bin
+you need to Download geckodriver(for Linux) or msedgedriver.exe(for Windows) on your machine,
+download the binary from the official repos:
+
+* https://github.com/mozilla/geckodriver/releases/latest
+* https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/
+
+extract and copy the binary, put it in the bin folder inside the program.
 ```
 
 ## Docker
@@ -51,7 +54,7 @@ usage: fisherman.py [-h] [--version] [-u [USERNAME ...] | -i [ID ...] |
                     [-work WORK | -education EDUCATION | -city CITY] [-b]
                     [--email EMAIL] [--password PASSWORD] [-o | -c]
 
-FisherMan: Extract information from facebook profiles. (Version 3.8)
+FisherMan: Extract information from facebook profiles. (Version 3.8.1)
 
 options:
   -h, --help            show this help message and exit
