@@ -770,6 +770,9 @@ class Fisher(Manager):
 
 
     def __who_is():
+        """
+        It takes the OS and returns the corresponding webdriver.
+        """
         if "win" in sys.platform:
             return (Edge, EdgeOptions(), "./bin/msedgedriver.exe")
         else:
