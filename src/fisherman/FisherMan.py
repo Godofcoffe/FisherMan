@@ -15,7 +15,7 @@ import requests.exceptions
 from selenium.common import exceptions
 from selenium.webdriver import Firefox, Edge
 from selenium.webdriver.edge.options import Options as EdgeOptions
-from selenium.webdriver.firefox.options import FirefoxOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
@@ -29,15 +29,21 @@ __version__ = "3.9"
 __queue__ = [] # list of functions that have updated files
 
 
-def generic_exception(func: Callable) -> Callable:
+class GenericException(Exception):
+    msg = f"Something wrong happened here.\nReport in: https://github.com/Godofcoffe/FisherMan/issues"
 
-    def exception(*args, **kwargs):
-        try:
-            func(*args, **kwargs)
-        except Exception as error:
-            raise Exception(f"Something wrong happened here:\n{error}\n"
-                            "Report in:https://github.com/Godofcoffe/FisherMan/issues")
-    return exception
+
+    def __init__(self, **kwargs):
+        super().__init__(self.msg, **kwargs)
+
+
+    def __call__(self, func: Callable) -> Callable:
+        def exception(*args, **kwargs):
+            try:
+                data = func(*args, **kwargs)
+            except Exception as error:
+                raise GenericException()
+        return exception
 
 
 class Fisher(Manager):
@@ -89,7 +95,7 @@ class Fisher(Manager):
         self.__control(filters=self._upgrade_filters) # add more parameters as you add files to update.
 
 
-    @generic_exception
+    @GenericException()
     def __control(self, **kwargs) -> None:
         """
             Controls the flow of file updates.
@@ -196,7 +202,7 @@ class Fisher(Manager):
             r3.raise_for_status()
 
 
-    @generic_exception
+    @GenericException()
     def show_filters(self) -> None:
         """
             Shows the available filters.
@@ -231,7 +237,6 @@ class Fisher(Manager):
                 )
 
 
-    @generic_exception
     def entry(self, name_file: str) -> List[str]:
         """
             Load a file to replace the username parameter.
@@ -267,7 +272,7 @@ class Fisher(Manager):
             print('[+] successful compression')
 
 
-    @generic_exception
+    @GenericException()
     def save_and_compact(self, _list: List[str]) -> None:
         """
             Create a zip of all the program's outputs.
@@ -288,8 +293,8 @@ class Fisher(Manager):
             raise ConnectionError("There is no internet connection")
 
 
-    @generic_exception
-    def _search(self, brw: Firefox, user: AnyStr) -> None:
+    @GenericException()
+    def _search(self, brw, user: AnyStr) -> None:
         """
             It searches by the person's name.
 
@@ -374,7 +379,7 @@ class Fisher(Manager):
     # or get.all_...() for a tuple with specific information.
 
 
-    def _extra_data(self, brw: Firefox, user: AnyStr) -> None:
+    def _extra_data(self, brw, user: AnyStr) -> None:
         """
             Save other data outside the about user page.
 
@@ -459,7 +464,7 @@ class Fisher(Manager):
             self.add_extras(user, {"Bio": bio, "Followers": followers, "Friends": friends})
 
 
-    def __scrolling_by_element(self, brw: Firefox, locator: Tuple, n=30) -> List:
+    def __scrolling_by_element(self, brw, locator: Tuple, n=30) -> List:
         """
             Scroll page by the number of elements.
 
@@ -499,8 +504,8 @@ class Fisher(Manager):
             return self.get_url(), user
 
 
-    @generic_exception
-    def _scrape(self, brw: Firefox, items: List[AnyStr]) -> None:
+    @GenericException()
+    def _scrape(self, brw, items: List[AnyStr]) -> None:
         """
             Extract certain information from the html of an item in the list provided.
 
@@ -668,12 +673,11 @@ class Fisher(Manager):
             self.add_data(usrs, temp_data)
 
 
-    def __login(self, brw: Firefox) -> None:
+    def __login(self, brw) -> None:
         """
             Execute the login on the page.
         """
         url_base = self.get_url()
-
 
         try:
             brw.get(url_base)
@@ -695,15 +699,16 @@ class Fisher(Manager):
 
             brw.delete_all_cookies()
             self.__login(brw)
+        except AttributeError: 
+            raise GenericException()
         finally:
-            if brw.current_url != url_base:
+            if brw is None or (brw.current_url != url_base):
                 if not self.args.blackout:
                     print(color_text("red", "Unfortunately, I could not load the facebook homepage to login."))
                     print(color_text("yellow", "Go to the repository and create a new issue reporting the problem."))
                 else:
                     print("Unfortunately, I could not load the facebook homepage to login.")
                     print("Go to the repository and create a new issue reporting the problem.")
-                sys.exit(1)
 
         wbw = WebDriverWait(brw, 10)
 
@@ -741,7 +746,7 @@ class Fisher(Manager):
         else:
             if self.args.verbose:
                 print(f'adding email: {self.args.email}')
-                email.send_keys(self.args.self.args.email)
+                email.send_keys(self.args.email)
                 print('adding password:...')
                 pwd.send_keys(self.args.pwd)
             else:
@@ -756,20 +761,18 @@ class Fisher(Manager):
                 print('[+] successfully logged in')
 
 
-    @generic_exception
-    def login_in(self, browser: Firefox) -> None:
+    @GenericException()
+    def login_in(self, browser) -> None:
         """
             Login on the page.
 
-            :param brw: Instance of WebDriver.
+            :param browser: Instance of WebDriver.
         """
-        if not all(args):
-            sys.exit(1)
-        else:
-            self.__login(browser)
+
+        self.__login(browser)
 
 
-    def __who_is():
+    def __who_is(self):
         """
         It takes the OS and returns the corresponding webdriver.
         """
@@ -779,23 +782,40 @@ class Fisher(Manager):
             return (Firefox, FirefoxOptions(), "./bin/geckodriver")
 
 
-    @generic_exception
-    def _boot(self) -> Firefox | Edge:
+    def boot(self) -> Firefox:
         """
             Start the webdriver.
         """
 
+
         driver, _options, _path = self.__who_is()
 
-        if isinstance(driver, Edge):
-            _options.set_capability(
-                "args", [
-                    "--incognito",
-                    "--disable-extensions",
-                    "--disable-plugins-discovery",
-                    "--start-maximized"
+        capability = ["--incognito",
+                      "--disable-extensions",
+                      "--disable-plugins-discovery",
+                      "--start-maximized"
                     ]
-                )
+
+        hidden = False
+
+        if not self.args.browser:
+            if self.args.verbose:
+                if not self.args.blackout:
+                    print(f'[{color_text("blue", "*")}] Starting in hidden mode')
+                else:
+                    print('[*] starting in hidden mode')
+            hidden = True
+
+        if self.args.verbose:
+            if not self.args:
+                print(f'[{color_text("white", "*")}] Opening browser...')
+            else:
+                print('[*] opening browser...')
+        
+        if isinstance(driver, Edge):
+            if hidden:
+                capability.append("--headless")
+            _options.set_capability("args", capability)
         else:
             _options.add_argument("--start-maximized")
 
@@ -813,21 +833,9 @@ class Fisher(Manager):
             # _options.add_argument('--profile-directory=Default')
             _options.add_argument("--disable-plugins-discovery")
 
+            if hidden:
+                _options.headless = True
 
-        if not self.args.browser:
-            if self.args.verbose:
-                if not self.args.blackout:
-                    print(f'[{color_text("blue", "*")}] Starting in hidden mode')
-                else:
-                    print('[*] starting in hidden mode')
-            _options.headless = True
-
-
-        if self.args.verbose:
-            if not self.args:
-                print(f'[{color_text("white", "*")}] Opening browser...')
-            else:
-                print('[*] opening browser...')
         try:
             engine = driver(executable_path=_path, options=_options)
 
@@ -849,9 +857,9 @@ class Fisher(Manager):
                 if not self.args.blackout:
                     print(color_text("red", message))
                     print(color_text("yellow", f"error details:\n{error}"))
-            else:
-                print(message)
-                print(f"error details:\n{error}")
+                else:
+                    print(message)
+                    print(f"error details:\n{error}")
         else:
             return engine
 
@@ -875,7 +883,7 @@ class Fisher(Manager):
             print('[+] .txt file(s) created')
 
 
-    @generic_exception
+    @GenericException()
     def save(self, _input: List[str]) -> None:
         """
             Create the .txt output of the -o parameter.

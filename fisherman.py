@@ -2,7 +2,13 @@
 
 from argparse import ArgumentParser
 
-from src.fisherman.FisherMan import Fisher, __version__, module_name, color_text
+from src.fisherman.FisherMan import (
+                                    Fisher,
+                                    __version__,
+                                    module_name,
+                                    color_text,
+                                    GenericException
+                                    )
 
 
 
@@ -89,11 +95,11 @@ if cli.filters:
 elif cli.update:
     little_fish.update()
 elif any((cli.id, cli.username, cli.search, cli.txt)):
-    browser = little_fish._boot()
+    browser = little_fish.boot()
     try:
         little_fish.login_in(browser)
-    except Exception as error:
-        print(error)
+    except Exception:
+        raise GenericException()
     else:
         if cli.search:
             little_fish._search(browser, cli.search)
@@ -144,8 +150,7 @@ elif any((cli.id, cli.username, cli.search, cli.txt)):
             else:
                 print("Forgive me, I couldn't find anything.")
     finally:
-        if browser is not None:
-            browser.quit()
+        browser.quit()
 else:
     print(f"No input argument was used.")
     print(f"Use an optional argument to run the script.")
