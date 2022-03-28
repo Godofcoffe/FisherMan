@@ -830,12 +830,25 @@ class Fisher(Manager):
                 print('[*] opening browser...')
         try:
             engine = driver(executable_path=_path, options=_options)
+
         except Exception as error:
             message = 'The executable "geckodriver/msedgedriver.exe" '
             'was not found or the browser "Firefox" is not installed.'
             if not self.args.blackout:
                 print(color_text("red", message))
                 print(color_text("yellow", f"error details:\n{error}"))
+            else:
+                print(message)
+                print(f"error details:\n{error}")
+
+            print("Trying the default system path....")
+
+            try:
+                engine = driver(options=_options)
+            except Exception as error:
+                if not self.args.blackout:
+                    print(color_text("red", message))
+                    print(color_text("yellow", f"error details:\n{error}"))
             else:
                 print(message)
                 print(f"error details:\n{error}")
