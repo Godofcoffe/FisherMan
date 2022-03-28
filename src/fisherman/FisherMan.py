@@ -756,12 +756,13 @@ class Fisher(Manager):
 
         # browser settings
         _options = Options()
-        _options.set_capability("args", [
+        hidden = False
+        capabilitys = [
             "--incognito",
             "--disable-extensions",
             "--disable-plugins-discovery",
             "--start-maximized"
-        ])
+        ]
 
         if not self.args.browser:
             if self.args.verbose:
@@ -769,7 +770,12 @@ class Fisher(Manager):
                     print(f'[{color_text("blue", "*")}] Starting in hidden mode')
                 else:
                     print('[*] starting in hidden mode')
-            _options.headless = True
+            hidden = True
+
+        if hidden:
+            capabilitys.append("--headless")
+
+        _options.set_capability("args", capabilitys)
 
         if self.args.verbose:
             if not self.args:
