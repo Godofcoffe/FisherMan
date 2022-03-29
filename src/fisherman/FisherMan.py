@@ -42,7 +42,7 @@ class GenericException(Exception):
             try:
                 data = func(*args, **kwargs)
             except Exception as error:
-                raise GenericException()
+                raise GenericException
         return exception
 
 
@@ -699,8 +699,6 @@ class Fisher(Manager):
 
             brw.delete_all_cookies()
             self.__login(brw)
-        except AttributeError: 
-            raise GenericException()
         finally:
             if brw is None or (brw.current_url != url_base):
                 if not self.args.blackout:
@@ -761,7 +759,6 @@ class Fisher(Manager):
                 print('[+] successfully logged in')
 
 
-    @GenericException()
     def login_in(self, browser) -> None:
         """
             Login on the page.
@@ -840,8 +837,8 @@ class Fisher(Manager):
             engine = driver(executable_path=_path, options=_options)
 
         except Exception as error:
-            message = 'The executable "geckodriver/msedgedriver.exe" '
-            'was not found or the browser "Firefox" is not installed.'
+            message = 'The executable "geckodriver/msedgedriver.exe" ' \
+                      'was not found or the browser "Firefox" is not installed.'
             if not self.args.blackout:
                 print(color_text("red", message))
                 print(color_text("yellow", f"error details:\n{error}"))

@@ -98,8 +98,8 @@ elif any((cli.id, cli.username, cli.search, cli.txt)):
     browser = little_fish.boot()
     try:
         little_fish.login_in(browser)
-    except Exception:
-        raise GenericException()
+    except (AttributeError, GenericException):
+        raise GenericException
     else:
         if cli.search:
             little_fish._search(browser, cli.search)
@@ -150,7 +150,8 @@ elif any((cli.id, cli.username, cli.search, cli.txt)):
             else:
                 print("Forgive me, I couldn't find anything.")
     finally:
-        browser.quit()
+        if browser is not None:
+            browser.quit()
 else:
     print(f"No input argument was used.")
     print(f"Use an optional argument to run the script.")
