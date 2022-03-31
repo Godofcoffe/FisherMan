@@ -798,7 +798,6 @@ class Fisher(Manager):
                     ]
 
         hidden = False
-
         if not self.args.browser:
             if self.args.verbose:
                 if not self.args.blackout:
@@ -808,7 +807,7 @@ class Fisher(Manager):
             hidden = True
 
         if self.args.verbose:
-            if not self.args:
+            if not self.args.blackout:
                 print(f'[{color_text("white", "*")}] Opening browser...')
             else:
                 print('[*] opening browser...')
@@ -848,6 +847,8 @@ class Fisher(Manager):
                         print("[*] activated: only_DOM")
                 _options.page_load_strategy = "eager"
 
+            if hidden:
+                _options.headless = True
 
             _options.add_argument("--start-maximized")
 
@@ -864,9 +865,6 @@ class Fisher(Manager):
             _options.add_argument("--disable-extensions")
             # _options.add_argument('--profile-directory=Default')
             _options.add_argument("--disable-plugins-discovery")
-
-            if hidden:
-                _options.headless = True
 
         try:
             engine = driver(executable_path=_path, options=_options)
