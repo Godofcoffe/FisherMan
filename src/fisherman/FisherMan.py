@@ -13,7 +13,7 @@ import colorama
 import requests
 import requests.exceptions
 from selenium.common import exceptions
-from selenium.webdriver import Firefox, Edge
+from selenium.webdriver import Firefox, Edge, DesiredCapabilities
 from selenium.webdriver.edge.options import Options as EdgeOptions
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from selenium.webdriver.common.by import By
@@ -814,6 +814,24 @@ class Fisher(Manager):
                 capability.append("--headless")
             _options.set_capability("args", capability)
         else:
+            if self.args.proxy:
+                prox_http = self.args.proxy
+                if self.args.verbose:
+                    if not self.args.blackout:
+                        print("[{1}] activated: proxy({0})".format(
+                                                                    color_text("yellow", self.args.proxy),
+                                                                    color_text("yellow", "*")
+                                                                )
+                             )
+                    else:
+                        print(f"[*] activated: proxy({self.args.proxy})")
+
+                # prox_https = "<>"
+                DesiredCapabilities.FIREFOX["proxy"] = {
+                    "httpProxy": prox_http,
+                    "proxyType": "MANUAL",
+                }
+
             _options.add_argument("--start-maximized")
 
             # eliminate pop-ups

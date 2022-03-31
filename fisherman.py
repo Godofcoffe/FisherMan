@@ -79,6 +79,11 @@ opt_login.add_argument('--password', metavar='PASSWORD', dest='pwd',
                             help='set the password for your facebook account, '
                                  'this parameter HAS to be used with --email')
 
+parser.add_argument("--proxy", nargs="?",
+                        type=str, const="12.151.56.30:80",
+                        metavar="HOST:PORT",
+                        help="define a proxy server to use")
+
 exclusive_out.add_argument('-o', '--file-output', action='store_true', dest='out',
                                 help='save the output data to a .txt file')
 
