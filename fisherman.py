@@ -21,6 +21,7 @@ exclusive_group2 = parser.add_mutually_exclusive_group()
 
 opt_search = parser.add_argument_group("search options")
 opt_profile = parser.add_argument_group("profile options")
+sub_opt_profile = opt_profile.add_mutually_exclusive_group()
 opt_login = parser.add_argument_group("credentials")
 opt_out = parser.add_argument_group("output")
 
@@ -59,8 +60,11 @@ opt_profile.add_argument('-sf', '--scrape-family', action='store_true', dest='sc
 opt_profile.add_argument("--specify", nargs="*", type=int, choices=(0, 1, 2, 3, 4, 5),
                          help="use the index number to return a specific part of the page")
 
-opt_profile.add_argument("-s", "--several", action="store_true",
+sub_opt_profile.add_argument("-s", "--several", action="store_true",
                          help="returns extra data like profile picture, number of followers and friends")
+
+sub_opt_profile.add_argument("--only-dom", action="store_true", dest="dom",
+                                help="only the DOM/text of the page is used")
 
 opt_search.add_argument("--filters", action="store_true",
                         help="shows the list of available filters")

@@ -832,6 +832,19 @@ class Fisher(Manager):
                     "proxyType": "MANUAL",
                 }
 
+            if self.args.dom:
+                if self.args.verbose:
+                    if not self.args.blackout:
+                        print("[{1}] activated {0}".format(
+                                                        color_text("yellow", "only_DOM"),
+                                                        color_text("yellow", "*")
+                                                        )
+                             )
+                    else:
+                        print("[*] activated: only_DOM")
+                _options.page_load_strategy = "eager"
+
+
             _options.add_argument("--start-maximized")
 
             # eliminate pop-ups
