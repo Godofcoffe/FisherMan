@@ -54,10 +54,11 @@ docker run --rm -it fisherman --help
 $ python3 fisherman.py --help
 usage: fisherman.py [-h] [--version] [-u [USERNAME ...] | -i [ID ...] |
                     --use-txt TXT_FILE | -S USER] [--update] [--blackout]
-                    [-v | -q] [-sf] [--specify [{0,1,2,3,4,5} ...]] [-s]
-                    [--filters]
+                    [-v | -q] [-sf] [--specify [{0,1,2,3,4,5} ...]]
+                    [-s | --only-dom] [--filters]
                     [-work WORK | -education EDUCATION | -city CITY] [-b]
-                    [--email EMAIL] [--password PASSWORD] [-o | -c]
+                    [--email EMAIL] [--password PASSWORD]
+                    [--proxy [HOST:PORT]] [-o | -c]
 
 FisherMan: Extract information from facebook profiles. (Version 3.9)
 
@@ -79,6 +80,7 @@ options:
   -q, --quiet           eliminates and simplifies some script outputs for a
                         simpler and discrete visualization
   -b, --browser         opens the browser/bot
+  --proxy [HOST:PORT]   define a proxy server to use
 
 search options:
   --filters             shows the list of available filters
@@ -94,6 +96,7 @@ profile options:
                         page
   -s, --several         returns extra data like profile picture, number of
                         followers and friends
+  --only-dom            only the DOM/text of the page is used
 
 credentials:
   --email EMAIL         if the profile is blocked, you can define your
@@ -105,7 +108,6 @@ credentials:
 output:
   -o, --file-output     save the output data to a .txt file
   -c, --compact         save the output data to a .txt file and compress
-
 ```
 
 To search for a user:
@@ -148,11 +150,11 @@ python3 fisherman.py --email youremail@email.com --password yourpass
     * Association of the pages:
       ```
       about: 0
-      about_contact_and_basic_info: 1
-      about_family_and_relationships: 2
-      about_details: 3
-      about_work_and_education: 4
-      about_places: 5
+      about contact and basic info: 1
+      about family and relationships: 2
+      about details: 3
+      about work and education: 4
+      about places: 5
       ```
 
 * To get additional things like profile picture, how many followers and how many friends:
@@ -179,7 +181,16 @@ python3 fisherman.py --email youremail@email.com --password yourpass
   ```
   Considerably reduces the script's output texts and, by convention, improves performance.
 
-## If you are using windows: [source](https://github.com/Godofcoffe/FisherMan/tree/compatible-with-windows)
+* Using proxies:
+  ```
+  python3 fisherman.py -u name --proxy
+  ```
+  A default server will be used, but you can still set a server that you think is best `--proxy <HOST:PORT>`, but I recommend that it should not be too far away from the US region so that the account is not at risk of being blocked.
+
+  And there is still the option of a small optimization of the page, making the browser load only the DOM and disabling media such as images. Using:
+    ```
+    python3 fisherman.py -u name --proxy --only-dom
+    ```
 
 ## Contributing
 I would love to have your help in developing this project.
