@@ -4,6 +4,7 @@ from base64 import b64decode
 from datetime import datetime
 from os import remove, getcwd, scandir
 from pathlib import Path
+from random import randint
 from re import findall
 from time import sleep
 from typing import Callable, List, AnyStr, Tuple
@@ -719,8 +720,11 @@ class Fisher(Manager):
 
         # custom accounts will only be applied if both fields are not empty
         if self.args.email is None or self.args.pwd is None:
-            ghost_email = self.get_email()
-            ghost_pass = self.get_pass()
+            prof_len = len(self.get_profiles())
+            index = randint(1, prof_len)
+
+            ghost_email = self.get_profiles()[index][0]
+            ghost_pass = self.get_profiles()[index][1]
 
             if self.args.verbose:
                 if not self.args.blackout:

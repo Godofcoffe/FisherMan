@@ -28,8 +28,11 @@ class Manager:
     __url_base = 'https://www.facebook.com/'
     __id_url_prefix = "https://www.facebook.com/profile.php?id="
     __prefix_url_search = "https://www.facebook.com/search/people/?q="
-    __ghost_email = 'gmarquizn@gmail.com'
-    __ghost_password = 'dGlqb2xpbjAw'
+    __ghost_profiles = {
+        1: ["opalabrillante@outlook.com", "MDMwMzBra2s="],
+        2: ["ca8239309@gmail.com", "Y2FmZWVlISE="],
+        3: ["alistrokta@hotmail.com", "bmF0YWwsbmF0YWw="],
+    }
     __data = {}
     __affluent = {}
     __extras = {}
@@ -63,24 +66,6 @@ class Manager:
             Clear extras data.
         """
         cls.__extras.clear()
-
-    @classmethod
-    def set_email(cls, string: AnyStr) -> None:
-        """
-            Defines the default email to use.
-
-            :param string: Email.
-        """
-        cls.__ghost_email = string
-
-    @classmethod
-    def set_pass(cls, string: AnyStr) -> None:
-        """
-            Defines the default password to use.
-
-            :param string: Password.
-        """
-        cls.__ghost_password = string
 
     @classmethod
     def set_data(cls, dictionary: Dict) -> None:
@@ -167,22 +152,11 @@ class Manager:
         return cls.__prefix_url_search
 
     @classmethod
-    def get_email(cls) -> AnyStr:
+    def get_profiles(cls) -> Dict:
         """
-            Returns default class email.
-
-            :return: default email.
+        Returns all ghost profiles.
         """
-        return cls.__ghost_email
-
-    @classmethod
-    def get_pass(cls) -> AnyStr:
-        """
-            Returns default class password.
-
-            :return: default password.
-        """
-        return cls.__ghost_password
+        return cls.__ghost_profiles
 
     @classmethod
     def get_data(cls) -> Dict:
