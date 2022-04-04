@@ -14,7 +14,7 @@
 </div>
 
 ## Installation
-**Warning: The Windows compatibility script has been merged with the pricipal.**
+**Warning: The Windows compatibility script has been merged with the main.**
 ```console
 # clone the repo
 $ git clone https://github.com/Godofcoffe/FisherMan
@@ -26,13 +26,14 @@ $ cd FisherMan
 $ [python3 or py] -m pip install -r requeriments.txt
 
 # dependency:
-you need to Download geckodriver(for Linux) or msedgedriver.exe(for Windows) on your machine,
-download the binary from the official repos:
+you need to download geckodriver(for Linux) or msedgedriver.exe(for Windows) on your machine;
+Download the binary from the official repos:
 
-* https://github.com/mozilla/geckodriver/releases/latest
-* https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/
+-> https://github.com/mozilla/geckodriver/releases/latest
 
-extract and copy the binary, put it in the *bin* folder inside the program.
+-> https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/
+
+Extract and copy the binary, put it in the *bin* folder inside the program.
 ```
 
 ## Docker
