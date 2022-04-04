@@ -215,7 +215,7 @@ class Fisher(Manager):
                     print("\t", t)
 
 
-    def __upload_txt_file(self, name_file) -> List[str]:
+    def __upload_txt_file(self, name_file: str):
         """
             Load a file to replace the username parameter.
         """
