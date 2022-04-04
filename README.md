@@ -1,6 +1,6 @@
 <div align=center>
 
-  <img src="media/logo.png" style="width:200px;"></img>
+  <img src="media/logo.png" style="width:300px;"></img>
 
   [![GitHub license](https://img.shields.io/github/license/Godofcoffe/FisherMan)](https://github.com/Godofcoffe/FisherMan/blob/main/LICENSE)
   ![badge](https://img.shields.io/badge/version-3.9-blue)
