@@ -246,7 +246,7 @@ class Fisher(Manager):
 
             :return: A list with each line of the file.
         """
-        self.__upload_txt_file(name_file)
+        return self.__upload_txt_file(name_file)
 
 
     def __compact(self, _list) -> None:
