@@ -33,7 +33,6 @@ __queue__ = [] # list of functions that have updated files
 class GenericException(Exception):
     msg = f"Something wrong happened here.\nReport in: https://github.com/Godofcoffe/FisherMan/issues"
 
-
     def __init__(self, **kwargs):
         super().__init__(self.msg, **kwargs)
 
@@ -474,7 +473,6 @@ class Fisher(Manager):
             :param n: The number of elements you want it to return.
 
             The page will scroll until the condition n is met, the default value of n is 30.
-
         """
         wbw = WebDriverWait(brw, 10)
         px = 0
@@ -494,7 +492,6 @@ class Fisher(Manager):
 
             This function returns a username that is acceptable for the script to run correctly.
         """
-
         if "id=" in user or user.isnumeric():
             if "facebook.com" in user:
                 user = user[user.index("=") + 1:]
@@ -769,7 +766,6 @@ class Fisher(Manager):
 
             :param browser: Instance of WebDriver.
         """
-
         self.__login(browser)
 
 
@@ -787,8 +783,6 @@ class Fisher(Manager):
         """
             Start the webdriver.
         """
-
-
         driver, _options, _path = self.__who_is()
 
         capability = ["--incognito",
