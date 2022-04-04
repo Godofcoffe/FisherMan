@@ -188,7 +188,9 @@ python3 fisherman.py --email youremail@email.com --password yourpass
   ```
   A default server will be used, but you can still set a server that you think is best `--proxy <HOST:PORT>`, but I recommend that it should not be too far away from the US region so that the account is not at risk of being blocked.
 
-  And there is still the option of a small optimization of the page, making the browser load only the DOM and disabling media such as images. Using:
+  And there is still the option of a small optimization of the page, making the browser load only the DOM and disabling media such as images.
+    
+    Using:
     ```
     python3 fisherman.py -u name --proxy --only-dom
     ```
