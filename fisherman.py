@@ -85,6 +85,7 @@ opt_login.add_argument('--password', metavar='PASSWORD', dest='pwd',
 
 parser.add_argument("--proxy", nargs="?",
                         type=str, const="12.151.56.30:80",
+                        default="12.151.56.30:80",
                         metavar="HOST:PORT",
                         help="define a proxy server to use")
 
