@@ -32,6 +32,8 @@ class Manager:
         1: ["opalabrillante@outlook.com", "MDMwMzBra2s="],
         2: ["ca8239309@gmail.com", "Y2FmZWVlISE="],
         3: ["alistrokta@hotmail.com", "bmF0YWwsbmF0YWw="],
+        4: ["chumuskeiro@gmail.com", "cGFuZGVpcm9hcmRlbnRl"],
+        5: ["mokulelesupersonic@hotmail.com", "cGFwYWxlM21pa2E="],
     }
     __data = {}
     __affluent = {}
