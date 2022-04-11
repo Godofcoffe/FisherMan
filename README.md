@@ -61,7 +61,7 @@ usage: fisherman.py [-h] [--version] [-u [USERNAME ...] | -i [ID ...] |
                     [--email EMAIL] [--password PASSWORD]
                     [--proxy [HOST:PORT]] [-o | -c]
 
-FisherMan: Extract information from facebook profiles. (Version 3.9)
+FisherMan: Extract information from facebook profiles. (Version 3.9.1)
 
 options:
   -h, --help            show this help message and exit
