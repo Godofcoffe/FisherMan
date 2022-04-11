@@ -3,7 +3,7 @@
   <img src="media/logo.png" style="width:300px;"></img>
 
   [![GitHub license](https://img.shields.io/github/license/Godofcoffe/FisherMan)](https://github.com/Godofcoffe/FisherMan/blob/main/LICENSE)
-  ![badge](https://img.shields.io/badge/version-3.9-blue)
+  ![badge](https://img.shields.io/badge/version-3.9.1-blue)
   ![badge](https://img.shields.io/badge/python-%3E%3D3.8-orange)
 
 </div>
