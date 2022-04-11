@@ -35,6 +35,12 @@ class Manager:
         4: ["chumuskeiro@gmail.com", "cGFuZGVpcm9hcmRlbnRl"],
         5: ["mokulelesupersonic@hotmail.com", "cGFwYWxlM21pa2E="],
     }
+    _extras = {
+        "links": {
+            "banned": "https://www.facebook.com/checkpoint/[0-9]+/?next=https%3A%2F%2Fwww.facebook.com%2Fmobileprotection%3Fsource%3Dmobile_mirror_nux",
+            "unavailable": "https://pt-br.facebook.com/login/?privacy_mutation_token=eyJ0eXBlIjowLCJjcmVhdGlvbl90aW1lIjoxNjQ5Njg0ODM3LCJjYWxsc2l0ZV9pZCI6MzgxMjI5MDc5NTc1OTQ2fQ%3D%3D",
+        }
+    }
     __data = {}
     __affluent = {}
     __extras = {}
@@ -159,6 +165,10 @@ class Manager:
         Returns all ghost profiles.
         """
         return cls.__ghost_profiles
+
+    @classmethod
+    def remove_profile(cls, key:str) -> None:
+        cls.__ghost_profiles.pop(key)
 
     @classmethod
     def get_data(cls) -> Dict:

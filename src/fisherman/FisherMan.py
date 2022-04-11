@@ -5,7 +5,7 @@ from datetime import datetime
 from os import remove, getcwd, scandir
 from pathlib import Path
 from random import randint
-from re import findall
+from re import findall, search
 from time import sleep
 from typing import Callable, List, AnyStr, Tuple
 from zipfile import ZipFile, ZIP_DEFLATED
@@ -753,11 +753,34 @@ class Fisher(Manager):
                 email.send_keys(self.args.email)
                 pwd.send_keys(self.args.pwd)
         ok.click()
-        if self.args.verbose:
+
+        while search(self._extras["links"]["banned"], brw.current_url) or (
+                brw.current_url == self._extras["links"]["unavailable"]
+                ):
             if not self.args.blackout:
-                print(f'[{color_text("green", "+")}] successfully logged in')
+                print(f'[{color_text("red", "*")}] unavailable account')
             else:
-                print('[+] successfully logged in')
+                print('[*] unavailable account.')
+            print("Trying with another account...")
+
+            self.remove_profile(index)
+            prof_len = len(self.get_profiles())
+            index = randint(1, prof_len)
+
+            ghost_email = self.get_profiles()[index][0]
+            ghost_pass = self.get_profiles()[index][1]
+
+            email.clear()
+            pwd.clear()
+            email.send_keys(ghost_email)
+            pwd.send_keys(b64decode(ghost_pass).decode("utf-8"))
+            ok.click()
+        else:
+            if self.args.verbose:
+                if not self.args.blackout:
+                    print(f'[{color_text("green", "+")}] successfully logged in')
+                else:
+                    print('[+] successfully logged in')
 
 
     def login_in(self, browser) -> None:
